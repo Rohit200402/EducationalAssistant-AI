@@ -1,0 +1,16 @@
+<app-user-navbar></app-user-navbar>
+<div class="content-wrapper">
+  <div class="page-header"><h2><i class="fas fa-list me-2"></i>My Requests</h2></div>
+  <div class="mb-3"><app-search placeholder="Search your requests..." (searchChange)="onSearch($event)"></app-search></div>
+  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div *ngIf="!loading">
+    <div *ngIf="requests.length === 0" class="empty-state"><i class="fas fa-inbox"></i><p>No requests yet. <a routerLink="/user/ask">Ask your first question!</a></p></div>
+    <div *ngFor="let r of requests" class="card mb-3"><div class="card-body">
+      <div class="d-flex justify-content-between"><h6>{{ r.query | slice:0:80 }}</h6><span [class]="r.aiResponse ? 'badge bg-success' : 'badge bg-warning'">{{ r.aiResponse ? 'Answered' : 'Pending' }}</span></div>
+      <small class="text-muted">{{ r.categoryName }} | {{ r.requestedOn | date:'medium' }}</small>
+      <div class="mt-2" *ngIf="r.aiResponse"><a [routerLink]="['/user/responses', r.userRequestId]" class="btn btn-sm btn-outline-primary"><i class="fas fa-eye me-1"></i>View Response</a></div>
+    </div></div>
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+</div>
+<app-footer></app-footer>

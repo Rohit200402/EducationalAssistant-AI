@@ -1,0 +1,6 @@
+<div class="input-group">
+  <span class="input-group-text"><i class="fas fa-search"></i></span>
+  <input type="text" class="form-control" [placeholder]="placeholder" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+  <button *ngIf="searchTerm" class="btn btn-outline-secondary" (click)="onClear()"><i class="fas fa-times"></i></button>
+  <button class="btn btn-primary" (click)="onSearch()">Search</button>
+</div>

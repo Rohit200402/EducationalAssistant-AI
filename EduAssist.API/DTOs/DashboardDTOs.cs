@@ -1,0 +1,5 @@
+namespace EduAssist.API.DTOs;
+public class AdminDashboardStats { public int TotalUsers { get; set; } public int TotalRequests { get; set; } public int TotalResponses { get; set; } public int TotalCategories { get; set; } public int ActiveUsersToday { get; set; } public int RequestsToday { get; set; } public List<DashboardRequest> RecentRequests { get; set; } = new(); }
+public class UserDashboardStats { public int TotalQuestions { get; set; } public int TotalBookmarks { get; set; } public int CurrentStreak { get; set; } public int QuestionsThisWeek { get; set; } public int RemainingQuota { get; set; } public int DailyLimit { get; set; } = 20; public List<DashboardRequest> RecentQuestions { get; set; } = new(); public List<DashboardCategory> TopCategories { get; set; } = new(); }
+public class DashboardRequest { public int UserRequestId { get; set; } public string Query { get; set; } = ""; public string CategoryName { get; set; } = ""; public DateTime RequestedOn { get; set; } public bool HasResponse { get; set; } }
+public class DashboardCategory { public string CategoryName { get; set; } = ""; public int Count { get; set; } }

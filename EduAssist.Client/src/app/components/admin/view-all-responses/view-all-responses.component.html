@@ -1,0 +1,14 @@
+<app-admin-navbar></app-admin-navbar>
+<div class="content-wrapper">
+  <div class="page-header"><h2><i class="fas fa-robot me-2"></i>All AI Responses</h2></div>
+  <div class="mb-3"><app-search placeholder="Search responses..." (searchChange)="onSearch($event)"></app-search></div>
+  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div *ngIf="!loading">
+    <div *ngIf="responses.length === 0" class="empty-state"><i class="fas fa-robot"></i><p>No responses found</p></div>
+    <div *ngIf="responses.length > 0">
+      <div *ngFor="let r of responses" class="card mb-3"><div class="card-body"><div class="d-flex justify-content-between"><small class="text-muted">{{ r.categoryName }} | {{ r.createdAt | date:'short' }}</small></div><p class="mb-1"><strong>Q:</strong> {{ r.query }}</p><p class="text-muted mb-0">{{ r.response | slice:0:200 }}...</p></div></div>
+    </div>
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,16 @@
+<app-admin-navbar></app-admin-navbar>
+<div class="content-wrapper">
+  <div class="page-header d-flex justify-content-between align-items-center"><div><h2><i class="fas fa-tags me-2"></i>Manage Categories</h2></div><a routerLink="/admin/categories/create" class="btn btn-light"><i class="fas fa-plus me-1"></i>Add Category</a></div>
+  <div class="mb-3"><app-search placeholder="Search categories..." (searchChange)="onSearch($event)"></app-search></div>
+  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div *ngIf="!loading">
+    <div *ngIf="categories.length === 0" class="empty-state"><i class="fas fa-tags"></i><p>No categories found</p></div>
+    <div class="table-responsive" *ngIf="categories.length > 0">
+      <table class="table"><thead><tr><th>#</th><th>Subject Name</th><th>Actions</th></tr></thead>
+      <tbody><tr *ngFor="let c of categories; let i = index"><td>{{ (currentPage - 1) * 5 + i + 1 }}</td><td>{{ c.subjectName }}</td>
+      <td><a [routerLink]="['/admin/categories/edit', c.categoryId]" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a><a [routerLink]="['/admin/categories/delete', c.categoryId]" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a></td></tr></tbody></table>
+    </div>
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+</div>
+<app-footer></app-footer>

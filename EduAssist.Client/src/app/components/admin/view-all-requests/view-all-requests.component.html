@@ -1,0 +1,15 @@
+<app-admin-navbar></app-admin-navbar>
+<div class="content-wrapper">
+  <div class="page-header"><h2><i class="fas fa-question-circle me-2"></i>All Requests</h2></div>
+  <div class="mb-3"><app-search placeholder="Search requests..." (searchChange)="onSearch($event)"></app-search></div>
+  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div *ngIf="!loading">
+    <div *ngIf="requests.length === 0" class="empty-state"><i class="fas fa-inbox"></i><p>No requests found</p></div>
+    <div class="table-responsive" *ngIf="requests.length > 0">
+      <table class="table"><thead><tr><th>Query</th><th>Category</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody><tr *ngFor="let r of requests"><td>{{ r.query | slice:0:60 }}</td><td>{{ r.categoryName }}</td><td>{{ r.requestedOn | date:'short' }}</td><td><span [class]="r.aiResponse ? 'badge bg-success' : 'badge bg-warning'">{{ r.aiResponse ? 'Answered' : 'Pending' }}</span></td></tr></tbody></table>
+    </div>
+    <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
+  </div>
+</div>
+<app-footer></app-footer>
