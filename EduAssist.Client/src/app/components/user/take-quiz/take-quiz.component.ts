@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -21,12 +21,12 @@ export class TakeQuizComponent implements OnInit {
   loading = true;
   submitting = false;
 
-  constructor(private quizService: QuizService, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
+  constructor(private quizService: QuizService, private route: ActivatedRoute, private router: Router, private toast: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.quizService.getById(id).subscribe({
-      next: (q) => { this.quiz = q; this.loading = false; },
+      next: (q) => { this.quiz = q; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; this.toast.error('Quiz not found'); this.router.navigate(['/user/quiz']); }
     });
   }
@@ -56,7 +56,7 @@ export class TakeQuizComponent implements OnInit {
     }));
     this.submitting = true;
     this.quizService.submit(this.quiz.quizId, { answers: answerList }).subscribe({
-      next: () => { this.toast.success('Quiz submitted!'); this.router.navigate(['/user/quiz', this.quiz!.quizId, 'results']); },
+      next: () => { this.toast.success('Quiz submitted!'); this.cdr.detectChanges(); this.router.navigate(['/user/quiz', this.quiz!.quizId, 'results']); },
       error: () => { this.submitting = false; this.toast.error('Failed to submit quiz'); }
     });
   }

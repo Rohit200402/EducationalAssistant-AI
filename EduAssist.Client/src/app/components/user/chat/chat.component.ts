@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -30,14 +30,14 @@ export class ChatComponent implements OnInit {
   selectedCategoryId = 0;
   loading = true;
 
-  constructor(private conversationService: ConversationService, private categoryService: CategoryService, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
+  constructor(private conversationService: ConversationService, private categoryService: CategoryService, private route: ActivatedRoute, private router: Router, private toast: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id === 'new') {
       this.isNew = true;
       this.loading = false;
-      this.categoryService.getAllNoPagination().subscribe(c => this.categories = c);
+      this.categoryService.getAllNoPagination().subscribe(c => { this.categories = c; this.cdr.detectChanges(); });
     } else {
       this.loadConversation(+id!);
     }
@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit {
 
   loadConversation(id: number): void {
     this.conversationService.getById(id).subscribe({
-      next: (conv) => { this.conversation = conv; this.messages = conv.messages; this.loading = false; setTimeout(() => this.scrollToBottom(), 100); },
+      next: (conv) => { this.conversation = conv; this.messages = conv.messages; this.loading = false; this.cdr.detectChanges(); setTimeout(() => this.scrollToBottom(), 100); },
       error: () => { this.loading = false; this.toast.error('Conversation not found'); this.router.navigate(['/user/conversations']); }
     });
   }
@@ -53,7 +53,7 @@ export class ChatComponent implements OnInit {
   createConversation(): void {
     if (!this.newTitle.trim() || !this.selectedCategoryId) { this.toast.warning('Enter a title and select a category'); return; }
     this.conversationService.create({ title: this.newTitle, categoryId: this.selectedCategoryId }).subscribe({
-      next: (conv) => { this.conversation = conv; this.messages = conv.messages; this.isNew = false; this.router.navigate(['/user/chat', conv.conversationId], { replaceUrl: true }); },
+      next: (conv) => { this.conversation = conv; this.messages = conv.messages; this.isNew = false; this.cdr.detectChanges(); this.router.navigate(['/user/chat', conv.conversationId], { replaceUrl: true }); },
       error: () => this.toast.error('Failed to create conversation')
     });
   }
@@ -66,7 +66,7 @@ export class ChatComponent implements OnInit {
     this.newMessage = '';
     this.scrollToBottom();
     this.conversationService.sendMessage(this.conversation.conversationId, content).subscribe({
-      next: (msg) => { this.messages.push(msg); this.sending = false; this.scrollToBottom(); },
+      next: (msg) => { this.messages.push(msg); this.sending = false; this.cdr.detectChanges(); this.scrollToBottom(); },
       error: () => { this.sending = false; this.toast.error('Failed to get response'); }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminNavbarComponent } from '../../shared/admin-navbar/admin-navbar.component';
@@ -17,11 +17,11 @@ export class AdminDashboardComponent implements OnInit {
   stats: AdminDashboardStats | null = null;
   loading = true;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(private dashboardService: DashboardService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.dashboardService.getAdminStats().subscribe({
-      next: (data) => { this.stats = data; this.loading = false; },
+      next: (data) => { this.stats = data; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }

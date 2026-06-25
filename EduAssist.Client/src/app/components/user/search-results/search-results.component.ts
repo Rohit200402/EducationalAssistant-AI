@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -28,10 +28,10 @@ export class SearchResultsComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
 
-  constructor(private searchService: SearchService, private categoryService: CategoryService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private searchService: SearchService, private categoryService: CategoryService, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.categoryService.getAllNoPagination().subscribe(c => this.categories = c);
+    this.categoryService.getAllNoPagination().subscribe(c => { this.categories = c; this.cdr.detectChanges(); });
     this.route.queryParams.subscribe(params => {
       this.query = params['q'] || '';
       if (this.query) this.search();
@@ -49,6 +49,7 @@ export class SearchResultsComponent implements OnInit {
         this.totalCount = res.totalCount;
         this.totalPages = res.totalPages;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => { this.loading = false; }
     });

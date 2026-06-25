@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminNavbarComponent } from '../../shared/admin-navbar/admin-navbar.component';
@@ -22,7 +22,7 @@ export class ViewQuizStatsComponent implements OnInit {
   totalPages = 1;
   totalCount = 0;
 
-  constructor(private quizService: QuizService) {}
+  constructor(private quizService: QuizService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadStats();
@@ -31,7 +31,7 @@ export class ViewQuizStatsComponent implements OnInit {
 
   loadStats(): void {
     this.quizService.getStats().subscribe({
-      next: (res) => { this.stats = res; },
+      next: (res) => { this.stats = res; this.cdr.detectChanges(); },
       error: () => {}
     });
   }
@@ -39,7 +39,7 @@ export class ViewQuizStatsComponent implements OnInit {
   loadQuizzes(): void {
     this.loading = true;
     this.quizService.getAllAdmin(this.currentPage, 10).subscribe({
-      next: (res) => { this.quizzes = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; },
+      next: (res) => { this.quizzes = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }

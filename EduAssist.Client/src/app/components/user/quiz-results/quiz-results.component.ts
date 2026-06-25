@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -18,12 +18,12 @@ export class QuizResultsComponent implements OnInit {
   result: QuizResult | null = null;
   loading = true;
 
-  constructor(private quizService: QuizService, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
+  constructor(private quizService: QuizService, private route: ActivatedRoute, private router: Router, private toast: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.quizService.getResults(id).subscribe({
-      next: (r) => { this.result = r; this.loading = false; },
+      next: (r) => { this.result = r; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; this.toast.error('No results found'); this.router.navigate(['/user/quiz']); }
     });
   }

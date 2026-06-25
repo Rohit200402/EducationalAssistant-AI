@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminNavbarComponent } from '../../shared/admin-navbar/admin-navbar.component';
@@ -23,14 +23,14 @@ export class ViewAllConversationsComponent implements OnInit {
   totalCount = 0;
   search = '';
 
-  constructor(private conversationService: ConversationService) {}
+  constructor(private conversationService: ConversationService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { this.load(); }
 
   load(): void {
     this.loading = true;
     this.conversationService.getAllAdmin(this.currentPage, 10, this.search).subscribe({
-      next: (res) => { this.conversations = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; },
+      next: (res) => { this.conversations = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }
