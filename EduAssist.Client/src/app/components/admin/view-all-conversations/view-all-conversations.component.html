@@ -1,34 +1,59 @@
 <app-admin-navbar></app-admin-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-comments me-2"></i>All Conversations</h2></div>
-  <div class="mb-3"><app-search placeholder="Search conversations..." (searchChange)="onSearch($event)"></app-search></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div class="page-header">
+    <h2><i class="fas fa-comments me-2"></i>All Conversations</h2>
+    <p>Monitor all user conversations on the platform</p>
+  </div>
+
+  <div class="search-section">
+    <app-search placeholder="Search conversations..." (searchChange)="onSearch($event)"></app-search>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-skeleton">
+    <div class="skeleton-row" *ngFor="let s of [1,2,3,4,5]"></div>
+  </div>
+
   <div *ngIf="!loading">
-    <div *ngIf="conversations.length === 0" class="empty-state"><i class="fas fa-inbox"></i><p>No conversations found</p></div>
-    <div class="table-responsive" *ngIf="conversations.length > 0">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>User</th>
-            <th>Category</th>
-            <th>Messages</th>
-            <th>Last Active</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of conversations">
-            <td>{{ c.title | slice:0:50 }}</td>
-            <td>{{ c.userName }}</td>
-            <td><span class="badge bg-primary">{{ c.categoryName }}</span></td>
-            <td>{{ c.messageCount }}</td>
-            <td>{{ c.updatedAt | date:'short' }}</td>
-            <td><span [class]="c.isActive ? 'badge bg-success' : 'badge bg-secondary'">{{ c.isActive ? 'Active' : 'Closed' }}</span></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Empty State -->
+    <div *ngIf="conversations.length === 0" class="empty-state">
+      <i class="fas fa-inbox"></i>
+      <h4>No conversations found</h4>
+      <p>No conversations match your search criteria</p>
     </div>
+
+    <!-- Conversations Table -->
+    <div class="admin-card" *ngIf="conversations.length > 0">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>User</th>
+              <th>Category</th>
+              <th>Messages</th>
+              <th>Last Active</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of conversations">
+              <td class="title-cell">{{ c.title | slice:0:50 }}</td>
+              <td class="user-cell">{{ c.userName }}</td>
+              <td><span class="badge-category">{{ c.categoryName }}</span></td>
+              <td class="count-cell">
+                <span class="message-count">{{ c.messageCount }}</span>
+              </td>
+              <td class="date-cell">{{ c.updatedAt | date:'short' }}</td>
+              <td>
+                <span [class]="c.isActive ? 'badge-status-success' : 'badge-status-secondary'">{{ c.isActive ? 'Active' : 'Closed' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 </div>

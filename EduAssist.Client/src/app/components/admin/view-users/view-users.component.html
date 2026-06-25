@@ -1,20 +1,76 @@
 <app-admin-navbar></app-admin-navbar>
 <div class="content-wrapper">
-  <div class="page-header d-flex justify-content-between align-items-center"><div><h2><i class="fas fa-users me-2"></i>Manage Users</h2></div><a routerLink="/admin/users/create" class="btn btn-light"><i class="fas fa-plus me-1"></i>Create User</a></div>
-  <div class="mb-3"><app-search placeholder="Search users..." (searchChange)="onSearch($event)"></app-search></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
-  <div *ngIf="!loading">
-    <div *ngIf="users.length === 0" class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>
-    <div class="table-responsive" *ngIf="users.length > 0">
-      <table class="table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
-      <tbody><tr *ngFor="let u of users">
-        <td>{{ u.displayName }}</td><td>{{ u.email }}</td>
-        <td><span [class]="u.roles.includes('Admin') ? 'badge-role-admin' : 'badge-role-user'">{{ u.roles[0] }}</span></td>
-        <td><span [class]="u.isActive ? 'badge bg-success' : 'badge bg-danger'">{{ u.isActive ? 'Active' : 'Inactive' }}</span></td>
-        <td>{{ u.joinedOn | date:'mediumDate' }}</td>
-        <td><a [routerLink]="['/admin/users/edit', u.id]" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a><a [routerLink]="['/admin/users/delete', u.id]" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a></td>
-      </tr></tbody></table>
+  <div class="page-header">
+    <div class="page-header-content">
+      <div>
+        <h2><i class="fas fa-users me-2"></i>Manage Users</h2>
+        <p>View and manage all platform users</p>
+      </div>
+      <a routerLink="/admin/users/create" class="btn-primary-action">
+        <i class="fas fa-plus me-1"></i>Create User
+      </a>
     </div>
+  </div>
+
+  <div class="search-section">
+    <app-search placeholder="Search users..." (searchChange)="onSearch($event)"></app-search>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-skeleton">
+    <div class="skeleton-row" *ngFor="let s of [1,2,3,4,5]"></div>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- Empty State -->
+    <div *ngIf="users.length === 0" class="empty-state">
+      <i class="fas fa-users"></i>
+      <h4>No users found</h4>
+      <p>Try adjusting your search or create a new user</p>
+    </div>
+
+    <!-- Users Table -->
+    <div class="admin-card" *ngIf="users.length > 0">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users">
+              <td class="user-name-cell">
+                <div class="user-avatar">{{ u.displayName?.charAt(0) }}</div>
+                <span>{{ u.displayName }}</span>
+              </td>
+              <td class="email-cell">{{ u.email }}</td>
+              <td>
+                <span [class]="u.roles.includes('Admin') ? 'badge-role-admin' : 'badge-role-user'">{{ u.roles[0] }}</span>
+              </td>
+              <td>
+                <span [class]="u.isActive ? 'badge-status-success' : 'badge-status-danger'">{{ u.isActive ? 'Active' : 'Inactive' }}</span>
+              </td>
+              <td class="date-cell">{{ u.joinedOn | date:'mediumDate' }}</td>
+              <td class="actions-cell">
+                <a [routerLink]="['/admin/users/edit', u.id]" class="action-btn action-btn-edit" title="Edit user">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a [routerLink]="['/admin/users/delete', u.id]" class="action-btn action-btn-delete" title="Delete user">
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 </div>

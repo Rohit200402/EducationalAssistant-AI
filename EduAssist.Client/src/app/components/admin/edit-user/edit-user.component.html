@@ -1,22 +1,83 @@
 <app-admin-navbar></app-admin-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-user-edit me-2"></i>Edit User</h2></div>
-  <div *ngIf="user" class="card"><div class="card-body">
-    <form (ngSubmit)="submit()">
-      <div class="row">
-        <div class="col-md-6 mb-3"><label class="form-label">First Name</label><input class="form-control" [(ngModel)]="form.firstName" name="firstName" required></div>
-        <div class="col-md-6 mb-3"><label class="form-label">Last Name</label><input class="form-control" [(ngModel)]="form.lastName" name="lastName" required></div>
-      </div>
-      <div class="mb-3"><label class="form-label">Display Name</label><input class="form-control" [(ngModel)]="form.displayName" name="displayName" required></div>
-      <div class="row">
-        <div class="col-md-4 mb-3"><label class="form-label">Institution</label><input class="form-control" [(ngModel)]="form.institution" name="institution"></div>
-        <div class="col-md-4 mb-3"><label class="form-label">Grade</label><input class="form-control" [(ngModel)]="form.grade" name="grade"></div>
-        <div class="col-md-4 mb-3"><label class="form-label">Language</label><select class="form-select" [(ngModel)]="form.preferredLanguage" name="preferredLanguage"><option value="English">English</option><option value="Hindi">Hindi</option><option value="Spanish">Spanish</option></select></div>
-      </div>
-      <div class="mb-3"><label class="form-label">Bio</label><textarea class="form-control" [(ngModel)]="form.bio" name="bio" rows="3"></textarea></div>
-      <div class="form-check mb-3"><input type="checkbox" class="form-check-input" [(ngModel)]="form.isActive" name="isActive"><label class="form-check-label">Active</label></div>
-      <div class="d-flex gap-2"><button type="submit" class="btn btn-primary" [disabled]="loading"><i class="fas fa-save me-1"></i>Update</button><a routerLink="/admin/users" class="btn btn-secondary">Cancel</a></div>
-    </form>
-  </div></div>
+  <div class="page-header">
+    <h2><i class="fas fa-user-edit me-2"></i>Edit User</h2>
+    <p>Update user information and settings</p>
+  </div>
+
+  <div *ngIf="user" class="form-card">
+    <div class="form-card-header">
+      <h5><i class="fas fa-id-card me-2"></i>User Information</h5>
+    </div>
+    <div class="form-card-body">
+      <form (ngSubmit)="submit()">
+        <!-- Personal Information -->
+        <div class="form-section">
+          <div class="form-section-title">Personal Information</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">First Name</label>
+              <input class="form-control" [(ngModel)]="form.firstName" name="firstName" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Last Name</label>
+              <input class="form-control" [(ngModel)]="form.lastName" name="lastName" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Display Name</label>
+            <input class="form-control" [(ngModel)]="form.displayName" name="displayName" required>
+          </div>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="form-section">
+          <div class="form-section-title">Additional Details</div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Institution</label>
+              <input class="form-control" [(ngModel)]="form.institution" name="institution">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Grade</label>
+              <input class="form-control" [(ngModel)]="form.grade" name="grade">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Language</label>
+              <select class="form-select" [(ngModel)]="form.preferredLanguage" name="preferredLanguage">
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Spanish">Spanish</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Bio</label>
+            <textarea class="form-control" [(ngModel)]="form.bio" name="bio" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- Account Status -->
+        <div class="form-section">
+          <div class="form-section-title">Account Status</div>
+          <div class="form-check-custom">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="form.isActive" name="isActive" id="isActive">
+            <label class="form-check-label" for="isActive">
+              <span class="check-label-text">Active Account</span>
+              <span class="check-label-desc">User can log in and access the platform</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn-form-primary" [disabled]="loading">
+            <i class="fas fa-save me-1"></i>Update User
+          </button>
+          <a routerLink="/admin/users" class="btn-form-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 <app-footer></app-footer>

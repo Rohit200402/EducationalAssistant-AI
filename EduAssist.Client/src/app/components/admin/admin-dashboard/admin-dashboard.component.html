@@ -1,25 +1,142 @@
 <app-admin-navbar></app-admin-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h2><p>Platform overview and statistics</p></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+  <div class="page-header">
+    <h2><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h2>
+    <p>Platform overview and statistics</p>
+  </div>
+
+  <!-- Skeleton Loading State -->
+  <div *ngIf="loading" class="dashboard-skeleton">
+    <div class="row g-4 mb-4">
+      <div class="col-md-3" *ngFor="let s of [1,2,3,4]">
+        <div class="skeleton-card">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text wide"></div>
+          <div class="skeleton-text narrow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-4 mb-4">
+      <div class="col-md-6" *ngFor="let s of [1,2]">
+        <div class="skeleton-card">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text wide"></div>
+          <div class="skeleton-text narrow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="skeleton-table">
+      <div class="skeleton-text wide"></div>
+      <div class="skeleton-text wide"></div>
+      <div class="skeleton-text wide"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
   <div *ngIf="stats && !loading">
+    <!-- Primary Stats Row -->
     <div class="row g-4 mb-4">
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalUsers }}</div><div class="stat-label"><i class="fas fa-users me-1"></i>Total Users</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalRequests }}</div><div class="stat-label"><i class="fas fa-question-circle me-1"></i>Total Requests</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalResponses }}</div><div class="stat-label"><i class="fas fa-robot me-1"></i>Total Responses</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalCategories }}</div><div class="stat-label"><i class="fas fa-tags me-1"></i>Categories</div></div></div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-primary">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.totalUsers }}</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-info">
+            <i class="fas fa-question-circle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.totalRequests }}</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-success">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.totalResponses }}</div>
+            <div class="stat-label">Total Responses</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card">
+          <div class="stat-icon stat-icon-warning">
+            <i class="fas fa-tags"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.totalCategories }}</div>
+            <div class="stat-label">Categories</div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Secondary Stats Row -->
     <div class="row g-4 mb-4">
-      <div class="col-md-6"><div class="stat-card"><div class="stat-value">{{ stats.activeUsersToday }}</div><div class="stat-label"><i class="fas fa-user-clock me-1"></i>Active Users Today</div></div></div>
-      <div class="col-md-6"><div class="stat-card"><div class="stat-value">{{ stats.requestsToday }}</div><div class="stat-label"><i class="fas fa-calendar-day me-1"></i>Requests Today</div></div></div>
+      <div class="col-md-6">
+        <div class="stat-card stat-card-highlight">
+          <div class="stat-icon stat-icon-primary">
+            <i class="fas fa-user-clock"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.activeUsersToday }}</div>
+            <div class="stat-label">Active Users Today</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-card stat-card-highlight">
+          <div class="stat-icon stat-icon-info">
+            <i class="fas fa-calendar-day"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value">{{ stats.requestsToday }}</div>
+            <div class="stat-label">Requests Today</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h5><i class="fas fa-clock me-2"></i>Recent Requests</h5></div>
-      <div class="card-body">
-        <div *ngIf="stats.recentRequests.length === 0" class="empty-state"><i class="fas fa-inbox"></i><p>No requests yet</p></div>
+
+    <!-- Recent Requests Table -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="fas fa-clock me-2"></i>Recent Requests</h5>
+      </div>
+      <div class="admin-card-body">
+        <div *ngIf="stats.recentRequests.length === 0" class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>No requests yet</p>
+        </div>
         <div class="table-responsive" *ngIf="stats.recentRequests.length > 0">
-          <table class="table"><thead><tr><th>Query</th><th>Category</th><th>Date</th><th>Status</th></tr></thead>
-          <tbody><tr *ngFor="let r of stats.recentRequests"><td>{{ r.query | slice:0:50 }}...</td><td>{{ r.categoryName }}</td><td>{{ r.requestedOn | date:'short' }}</td><td><span [class]="r.hasResponse ? 'badge bg-success' : 'badge bg-warning'">{{ r.hasResponse ? 'Answered' : 'Pending' }}</span></td></tr></tbody></table>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Query</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of stats.recentRequests">
+                <td class="query-cell">{{ r.query | slice:0:50 }}...</td>
+                <td><span class="badge-category">{{ r.categoryName }}</span></td>
+                <td class="date-cell">{{ r.requestedOn | date:'short' }}</td>
+                <td><span [class]="r.hasResponse ? 'badge-status-success' : 'badge-status-warning'">{{ r.hasResponse ? 'Answered' : 'Pending' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
