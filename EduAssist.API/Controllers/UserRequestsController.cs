@@ -95,12 +95,12 @@ public class UserRequestsController : ControllerBase
                 }
             });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             user.TotalQueriesAsked++;
             user.LastActiveOn = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
-            return StatusCode(503, new { message = "AI service temporarily unavailable. Your question has been saved.", userRequestId = userRequest.UserRequestId });
+            return StatusCode(503, new { message = "AI service temporarily unavailable. Your question has been saved.", detail = ex.Message, userRequestId = userRequest.UserRequestId });
         }
     }
 
@@ -133,9 +133,9 @@ public class UserRequestsController : ControllerBase
                 CreatedAt = aiResponse.CreatedAt
             });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(503, new { message = "AI service temporarily unavailable. Please try again later.", userRequestId = id });
+            return StatusCode(503, new { message = "AI service temporarily unavailable. Please try again later.", detail = ex.Message, userRequestId = id });
         }
     }
 

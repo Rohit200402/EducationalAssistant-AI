@@ -34,7 +34,9 @@ public class AIService : IAIService
                 using var doc = JsonDocument.Parse(json);
                 return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "No response.";
             }
-            throw new Exception($"OpenAI error: {response.StatusCode}");
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("OpenAI API error - Status: {StatusCode}, Response: {ErrorBody}", response.StatusCode, errorBody);
+            throw new Exception($"OpenAI error: {response.StatusCode} - {errorBody}");
         }
         catch (Exception ex) { _logger.LogError(ex, "AI generation failed"); throw; }
     }
@@ -67,7 +69,9 @@ public class AIService : IAIService
                 using var doc = JsonDocument.Parse(json);
                 return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "No response.";
             }
-            throw new Exception($"OpenAI error: {response.StatusCode}");
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("OpenAI API error - Status: {StatusCode}, Response: {ErrorBody}", response.StatusCode, errorBody);
+            throw new Exception($"OpenAI error: {response.StatusCode} - {errorBody}");
         }
         catch (Exception ex) { _logger.LogError(ex, "AI conversation generation failed"); throw; }
     }
@@ -94,7 +98,9 @@ public class AIService : IAIService
                 using var doc = JsonDocument.Parse(json);
                 return doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString() ?? "[]";
             }
-            throw new Exception($"OpenAI error: {response.StatusCode}");
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("OpenAI API error - Status: {StatusCode}, Response: {ErrorBody}", response.StatusCode, errorBody);
+            throw new Exception($"OpenAI error: {response.StatusCode} - {errorBody}");
         }
         catch (Exception ex) { _logger.LogError(ex, "Quiz generation failed"); throw; }
     }
