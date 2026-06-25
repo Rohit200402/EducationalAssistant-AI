@@ -56,6 +56,7 @@
           <div class="message-bubble">
             <div class="message-role">
               <i class="fas me-1" [ngClass]="msg.role === 'user' ? 'fa-user' : 'fa-robot'"></i>{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}
+              <app-copy-button *ngIf="msg.role === 'assistant'" [text]="msg.content" class="ms-auto"></app-copy-button>
             </div>
             <div class="message-content">{{ msg.content }}</div>
             <div class="message-time">{{ msg.createdAt | date:'shortTime' }}</div>

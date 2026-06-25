@@ -1,0 +1,29 @@
+<div class="notification-bell-wrapper">
+  <button class="bell-btn" (click)="toggleDropdown()">
+    <i class="fas fa-bell"></i>
+    <span class="badge-count" *ngIf="notifications.length > 0">{{ notifications.length }}</span>
+  </button>
+  <div class="notification-dropdown" *ngIf="showDropdown">
+    <div class="dropdown-header">
+      <h6>Notifications</h6>
+      <span class="unread-count">{{ notifications.length }} unread</span>
+    </div>
+    <div class="dropdown-body">
+      <div *ngIf="notifications.length === 0" class="empty-notifications">
+        <i class="fas fa-check-circle"></i>
+        <p>All caught up!</p>
+      </div>
+      <div *ngFor="let n of notifications" class="notification-item">
+        <div class="notification-icon"><i [class]="getTypeIcon(n.type)"></i></div>
+        <div class="notification-content">
+          <strong>{{ n.title }}</strong>
+          <p>{{ n.message }}</p>
+          <span class="notification-time">{{ n.createdAt | date:'short' }}</span>
+        </div>
+        <button class="mark-read-btn" (click)="markRead(n.notificationId)" title="Mark as read">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

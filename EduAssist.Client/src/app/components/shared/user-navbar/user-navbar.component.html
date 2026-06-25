@@ -70,6 +70,14 @@
         <i class="fas fa-chart-line nav-icon"></i>
         <span class="nav-label">Progress</span>
       </a>
+      <a class="nav-item" routerLink="/user/leaderboard" routerLinkActive="active" (click)="closeSidebarOnMobile()">
+        <i class="fas fa-trophy nav-icon"></i>
+        <span class="nav-label">Leaderboard</span>
+      </a>
+      <a class="nav-item" routerLink="/user/study-planner" routerLinkActive="active" (click)="closeSidebarOnMobile()">
+        <i class="fas fa-bullseye nav-icon"></i>
+        <span class="nav-label">Study Planner</span>
+      </a>
     </div>
 
     <!-- Tools Section -->
@@ -84,6 +92,12 @@
 
   <!-- User Profile Area (Bottom) -->
   <div class="sidebar-footer">
+    <div class="sidebar-footer-actions">
+      <app-notification-bell></app-notification-bell>
+      <button class="theme-toggle-btn" (click)="toggleTheme()" title="Toggle theme">
+        <i [class]="themeService.getTheme() === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"></i>
+      </button>
+    </div>
     <a class="user-profile" routerLink="/user/profile" routerLinkActive="active" (click)="closeSidebarOnMobile()">
       <div class="user-avatar">
         <i class="fas fa-user"></i>

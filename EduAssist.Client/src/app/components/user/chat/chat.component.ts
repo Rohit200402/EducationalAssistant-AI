@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { ExportButtonComponent } from '../../shared/export-button/export-button.component';
+import { CopyButtonComponent } from '../../shared/copy-button/copy-button.component';
 import { ConversationService } from '../../../services/conversation.service';
 import { CategoryService } from '../../../services/category.service';
 import { ToastService } from '../../../services/toast.service';
@@ -14,7 +15,7 @@ import { Category } from '../../../models/category.model';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, UserNavbarComponent, FooterComponent, ExportButtonComponent],
+  imports: [CommonModule, FormsModule, RouterModule, UserNavbarComponent, FooterComponent, ExportButtonComponent, CopyButtonComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })

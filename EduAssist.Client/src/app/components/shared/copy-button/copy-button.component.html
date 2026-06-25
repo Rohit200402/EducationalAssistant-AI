@@ -1,0 +1,4 @@
+<button class="copy-btn" (click)="copyToClipboard()" [class.copied]="copied" [title]="copied ? 'Copied!' : 'Copy to clipboard'">
+  <i [class]="copied ? 'fas fa-check' : 'fas fa-copy'"></i>
+  <span class="copy-tooltip" *ngIf="copied">Copied!</span>
+</button>

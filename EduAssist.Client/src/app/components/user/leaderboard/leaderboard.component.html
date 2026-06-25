@@ -1,0 +1,41 @@
+<app-user-navbar></app-user-navbar>
+<div class="content-wrapper">
+  <div class="page-header">
+    <h2>Leaderboard</h2>
+    <p>See how you rank among top learners</p>
+  </div>
+
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="skeleton skeleton-text" *ngFor="let s of [1,2,3,4,5]" style="width: 100%; height: 52px; margin-bottom: 8px; border-radius: 8px;"></div>
+  </div>
+
+  <div *ngIf="!loading" class="leaderboard-container animate-fade-in">
+    <div *ngIf="leaderboard.length === 0" class="empty-state">
+      <i class="fas fa-trophy"></i>
+      <p>No data yet. Start asking questions to appear on the leaderboard!</p>
+    </div>
+
+    <div class="leaderboard-table" *ngIf="leaderboard.length > 0">
+      <div *ngFor="let entry of leaderboard" class="leaderboard-row" [ngClass]="{'top-three': entry.rank <= 3}">
+        <div class="rank-cell">
+          <span [class]="getMedalClass(entry.rank)">
+            <i [class]="getMedalIcon(entry.rank)" *ngIf="entry.rank <= 3"></i>
+            <span *ngIf="entry.rank > 3">{{ entry.rank }}</span>
+          </span>
+        </div>
+        <div class="user-cell">
+          <div class="user-avatar-small">{{ entry.displayName.charAt(0) }}</div>
+          <span class="user-name">{{ entry.displayName }}</span>
+        </div>
+        <div class="stats-cell">
+          <span class="stat-value">{{ entry.totalQuestions }}</span>
+          <span class="stat-label">questions</span>
+        </div>
+        <div class="category-cell">
+          <span class="category-badge">{{ entry.topCategory }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

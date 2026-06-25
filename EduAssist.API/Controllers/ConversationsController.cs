@@ -4,6 +4,7 @@ using EduAssist.API.DTOs;
 using EduAssist.API.Models;
 using EduAssist.API.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,8 @@ public class ConversationsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly IAIService _aiService;
-    public ConversationsController(ApplicationDbContext context, IAIService aiService) { _context = context; _aiService = aiService; }
+    private readonly UserManager<ApplicationUser> _userManager;
+    public ConversationsController(ApplicationDbContext context, IAIService aiService, UserManager<ApplicationUser> userManager) { _context = context; _aiService = aiService; _userManager = userManager; }
 
     private string GetUserId() => User.FindFirstValue("userId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
 
@@ -107,10 +109,14 @@ public class ConversationsController : ControllerBase
             query = query.Where(c => c.Title.Contains(search) || c.Category.SubjectName.Contains(search));
         }
         var totalCount = await query.CountAsync();
-        var items = await query.OrderByDescending(c => c.UpdatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
-            .Select(c => new AdminConversationListDto(c.ConversationId, c.Title,
-                _context.Users.Where(u => u.Id == c.UserId).Select(u => u.DisplayName).FirstOrDefault() ?? "Unknown",
-                c.Category.SubjectName, c.Messages.Count, c.CreatedAt, c.UpdatedAt, c.IsActive)).ToListAsync();
+        var conversations = await query.OrderByDescending(c => c.UpdatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .Select(c => new { c.ConversationId, c.Title, c.UserId, CategoryName = c.Category.SubjectName, MessageCount = c.Messages.Count, c.CreatedAt, c.UpdatedAt, c.IsActive }).ToListAsync();
+        var items = new List<AdminConversationListDto>();
+        foreach (var c in conversations)
+        {
+            var user = await _userManager.FindByIdAsync(c.UserId);
+            items.Add(new AdminConversationListDto(c.ConversationId, c.Title, user?.DisplayName ?? "Unknown", c.CategoryName, c.MessageCount, c.CreatedAt, c.UpdatedAt, c.IsActive));
+        }
         return Ok(new PaginatedResponse<AdminConversationListDto>(items, totalCount, pageNumber, pageSize));
     }
 
