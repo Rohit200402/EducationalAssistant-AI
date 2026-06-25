@@ -191,8 +191,9 @@ a:hover {
 .content-wrapper {
   max-width: var(--content-max-width);
   margin: 0 auto;
+  margin-left: var(--sidebar-width);
   padding: var(--space-6) var(--space-8);
-  min-height: calc(100vh - var(--navbar-height) - 80px);
+  min-height: calc(100vh - 80px);
 }
 
 /* ============================================================
@@ -970,7 +971,9 @@ textarea.form-control {
   }
 
   .content-wrapper {
+    margin-left: 0;
     padding: var(--space-4);
+    padding-top: calc(var(--space-4) + 56px);
   }
 
   .page-header {

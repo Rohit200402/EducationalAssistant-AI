@@ -5,7 +5,42 @@ import { CommonModule } from '@angular/common';
   selector: 'app-footer',
   standalone: true,
   imports: [CommonModule],
-  template: `<footer class="footer"><div class="container text-center"><span class="text-muted">&copy; 2025 EduAssist - AI Educational Assistant. All rights reserved.</span></div></footer>`,
-  styles: [`.footer { padding: 1.5rem 0; margin-top: 2rem; border-top: 1px solid #e2e8f0; background: white; }`]
+  template: `
+    <footer class="app-footer">
+      <div class="footer-content">
+        <span class="footer-text">&copy; 2025 EduAssist</span>
+        <span class="footer-separator">&#183;</span>
+        <span class="footer-text">AI Educational Assistant</span>
+      </div>
+    </footer>
+  `,
+  styles: [`
+    .app-footer {
+      padding: var(--space-6) var(--space-4);
+      margin-top: var(--space-8);
+      margin-left: var(--sidebar-width);
+      border-top: 1px solid var(--color-neutral-100);
+    }
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+    .footer-text {
+      font-size: var(--text-sm);
+      color: var(--color-neutral-400);
+      font-weight: var(--font-normal);
+    }
+    .footer-separator {
+      color: var(--color-neutral-300);
+      font-size: var(--text-lg);
+    }
+    @media (max-width: 768px) {
+      .app-footer {
+        margin-left: 0;
+      }
+    }
+  `]
 })
 export class FooterComponent {}

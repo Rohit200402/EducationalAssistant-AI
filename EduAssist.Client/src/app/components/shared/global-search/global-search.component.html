@@ -1,21 +1,68 @@
 <div class="global-search-wrapper">
-  <div class="input-group">
-    <input type="text" class="form-control form-control-sm" placeholder="Search Q&A..." [(ngModel)]="query" (input)="onSearch()" (blur)="hideDropdown()" (focus)="query && onSearch()">
-    <button class="btn btn-sm btn-outline-light" (click)="viewAll()" [disabled]="!query"><i class="fas fa-search"></i></button>
+  <div class="search-input-container">
+    <i class="fas fa-search search-icon"></i>
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search..."
+      [(ngModel)]="query"
+      (input)="onSearch()"
+      (blur)="hideDropdown()"
+      (focus)="query && onSearch()">
+    <span class="search-shortcut">
+      <kbd>&#8984;K</kbd>
+    </span>
   </div>
+
+  <!-- Results Dropdown -->
   <div class="search-dropdown" *ngIf="showDropdown && results.length > 0">
-    <div class="dropdown-item" *ngFor="let r of results" (mousedown)="navigateToResult(r)">
-      <div class="d-flex align-items-center">
-        <i class="fas me-2" [ngClass]="{'fa-question-circle text-primary': r.type === 'question', 'fa-robot text-success': r.type === 'response', 'fa-bookmark text-warning': r.type === 'bookmark'}"></i>
-        <div class="flex-grow-1 overflow-hidden">
-          <div class="result-title text-truncate">{{ r.title }}</div>
-          <small class="text-muted">{{ r.categoryName }} | {{ r.type }}</small>
+    <div class="dropdown-header">
+      <span class="dropdown-header-text">Results</span>
+      <span class="dropdown-count">{{ results.length }}</span>
+    </div>
+    <div class="dropdown-results">
+      <div class="result-item" *ngFor="let r of results" (mousedown)="navigateToResult(r)">
+        <div class="result-icon" [ngClass]="{
+          'result-icon--question': r.type === 'question',
+          'result-icon--response': r.type === 'response',
+          'result-icon--bookmark': r.type === 'bookmark'
+        }">
+          <i class="fas" [ngClass]="{
+            'fa-question-circle': r.type === 'question',
+            'fa-robot': r.type === 'response',
+            'fa-bookmark': r.type === 'bookmark'
+          }"></i>
+        </div>
+        <div class="result-content">
+          <div class="result-title">{{ r.title }}</div>
+          <div class="result-meta">
+            <span class="result-type-badge">{{ r.type }}</span>
+            <span class="result-category" *ngIf="r.categoryName">{{ r.categoryName }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="dropdown-item text-center" (mousedown)="viewAll()"><small class="text-primary">View all results</small></div>
+    <div class="dropdown-footer" (mousedown)="viewAll()">
+      <i class="fas fa-arrow-right"></i>
+      <span>View all results</span>
+    </div>
   </div>
-  <div class="search-dropdown" *ngIf="showDropdown && results.length === 0 && !loading">
-    <div class="dropdown-item text-center"><small class="text-muted">No results found</small></div>
+
+  <!-- Loading State -->
+  <div class="search-dropdown" *ngIf="showDropdown && loading">
+    <div class="loading-state">
+      <div class="loading-shimmer"></div>
+      <div class="loading-shimmer loading-shimmer--short"></div>
+      <div class="loading-shimmer"></div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="search-dropdown" *ngIf="showDropdown && results.length === 0 && !loading && query">
+    <div class="empty-state">
+      <i class="fas fa-search empty-state-icon"></i>
+      <span class="empty-state-text">No results found for "{{ query }}"</span>
+      <span class="empty-state-hint">Try different keywords or check your spelling</span>
+    </div>
   </div>
 </div>
