@@ -23,7 +23,7 @@ public class CategoriesController : ControllerBase
             query = query.Where(c => c.SubjectName.Contains(search));
         var totalCount = await query.CountAsync();
         var items = await query.OrderBy(c => c.SubjectName).Skip((pageNumber - 1) * pageSize).Take(pageSize)
-            .Select(c => new CategoryDto(c.CategoryId, c.SubjectName)).ToListAsync();
+            .Select(c => new CategoryDto(c.CategoryId, c.SubjectName, c.Description, c.SystemPrompt)).ToListAsync();
         return Ok(new PaginatedResponse<CategoryDto>(items, totalCount, pageNumber, pageSize));
     }
 
@@ -31,7 +31,7 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<List<CategoryDto>>> GetAllNoPagination()
     {
         var categories = await _context.Categories.OrderBy(c => c.SubjectName)
-            .Select(c => new CategoryDto(c.CategoryId, c.SubjectName)).ToListAsync();
+            .Select(c => new CategoryDto(c.CategoryId, c.SubjectName, c.Description, c.SystemPrompt)).ToListAsync();
         return Ok(categories);
     }
 
@@ -40,7 +40,7 @@ public class CategoriesController : ControllerBase
     {
         var category = await _context.Categories.FindAsync(id);
         if (category == null) return NotFound(new { message = "Category not found." });
-        return Ok(new CategoryDto(category.CategoryId, category.SubjectName));
+        return Ok(new CategoryDto(category.CategoryId, category.SubjectName, category.Description, category.SystemPrompt));
     }
 
     [HttpPost]
@@ -49,10 +49,10 @@ public class CategoriesController : ControllerBase
     {
         if (await _context.Categories.AnyAsync(c => c.SubjectName == dto.SubjectName))
             return BadRequest(new { message = "Category already exists." });
-        var category = new Category { SubjectName = dto.SubjectName };
+        var category = new Category { SubjectName = dto.SubjectName, Description = dto.Description, SystemPrompt = dto.SystemPrompt };
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = category.CategoryId }, new CategoryDto(category.CategoryId, category.SubjectName));
+        return CreatedAtAction(nameof(GetById), new { id = category.CategoryId }, new CategoryDto(category.CategoryId, category.SubjectName, category.Description, category.SystemPrompt));
     }
 
     [HttpPut("{id}")]
@@ -64,8 +64,10 @@ public class CategoriesController : ControllerBase
         if (await _context.Categories.AnyAsync(c => c.SubjectName == dto.SubjectName && c.CategoryId != id))
             return BadRequest(new { message = "Category name already exists." });
         category.SubjectName = dto.SubjectName;
+        category.Description = dto.Description;
+        category.SystemPrompt = dto.SystemPrompt;
         await _context.SaveChangesAsync();
-        return Ok(new CategoryDto(category.CategoryId, category.SubjectName));
+        return Ok(new CategoryDto(category.CategoryId, category.SubjectName, category.Description, category.SystemPrompt));
     }
 
     [HttpDelete("{id}")]

@@ -1,0 +1,21 @@
+<div class="global-search-wrapper">
+  <div class="input-group">
+    <input type="text" class="form-control form-control-sm" placeholder="Search Q&A..." [(ngModel)]="query" (input)="onSearch()" (blur)="hideDropdown()" (focus)="query && onSearch()">
+    <button class="btn btn-sm btn-outline-light" (click)="viewAll()" [disabled]="!query"><i class="fas fa-search"></i></button>
+  </div>
+  <div class="search-dropdown" *ngIf="showDropdown && results.length > 0">
+    <div class="dropdown-item" *ngFor="let r of results" (mousedown)="navigateToResult(r)">
+      <div class="d-flex align-items-center">
+        <i class="fas me-2" [ngClass]="{'fa-question-circle text-primary': r.type === 'question', 'fa-robot text-success': r.type === 'response', 'fa-bookmark text-warning': r.type === 'bookmark'}"></i>
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="result-title text-truncate">{{ r.title }}</div>
+          <small class="text-muted">{{ r.categoryName }} | {{ r.type }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown-item text-center" (mousedown)="viewAll()"><small class="text-primary">View all results</small></div>
+  </div>
+  <div class="search-dropdown" *ngIf="showDropdown && results.length === 0 && !loading">
+    <div class="dropdown-item text-center"><small class="text-muted">No results found</small></div>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+.content-wrapper { padding: 30px; min-height: calc(100vh - 120px); }
+.page-header { margin-bottom: 25px; }
+.page-header h2 { color: #333; font-weight: 600; }
+.response-card { cursor: pointer; transition: all 0.2s; }
+.response-card:hover { background: #f8f9fa; }
+.response-card.selected { border-color: #4a90d9; background: #e8f0fe; }

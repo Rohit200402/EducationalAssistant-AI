@@ -19,6 +19,8 @@ export const routes: Routes = [
   { path: 'admin/categories/delete/:id', loadComponent: () => import('./components/admin/delete-category/delete-category.component').then(m => m.DeleteCategoryComponent), canActivate: [adminGuard] },
   { path: 'admin/requests', loadComponent: () => import('./components/admin/view-all-requests/view-all-requests.component').then(m => m.ViewAllRequestsComponent), canActivate: [adminGuard] },
   { path: 'admin/responses', loadComponent: () => import('./components/admin/view-all-responses/view-all-responses.component').then(m => m.ViewAllResponsesComponent), canActivate: [adminGuard] },
+  { path: 'admin/conversations', loadComponent: () => import('./components/admin/view-all-conversations/view-all-conversations.component').then(m => m.ViewAllConversationsComponent), canActivate: [adminGuard] },
+  { path: 'admin/quiz-stats', loadComponent: () => import('./components/admin/view-quiz-stats/view-quiz-stats.component').then(m => m.ViewQuizStatsComponent), canActivate: [adminGuard] },
   // User routes
   { path: 'user/dashboard', loadComponent: () => import('./components/user/user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent), canActivate: [userGuard] },
   { path: 'user/ask', loadComponent: () => import('./components/user/ask-question/ask-question.component').then(m => m.AskQuestionComponent), canActivate: [userGuard] },
@@ -30,5 +32,18 @@ export const routes: Routes = [
   { path: 'user/bookmarks/edit/:id', loadComponent: () => import('./components/user/edit-bookmark/edit-bookmark.component').then(m => m.EditBookmarkComponent), canActivate: [userGuard] },
   { path: 'user/progress', loadComponent: () => import('./components/user/progress-tracking/progress-tracking.component').then(m => m.ProgressTrackingComponent), canActivate: [userGuard] },
   { path: 'user/profile', loadComponent: () => import('./components/user/edit-profile/edit-profile.component').then(m => m.EditProfileComponent), canActivate: [authGuard] },
+  // Search
+  { path: 'user/search', loadComponent: () => import('./components/user/search-results/search-results.component').then(m => m.SearchResultsComponent), canActivate: [userGuard] },
+  // Conversations
+  { path: 'user/conversations', loadComponent: () => import('./components/user/conversations/conversations.component').then(m => m.ConversationsComponent), canActivate: [userGuard] },
+  { path: 'user/chat/new', loadComponent: () => import('./components/user/chat/chat.component').then(m => m.ChatComponent), canActivate: [userGuard] },
+  { path: 'user/chat/:id', loadComponent: () => import('./components/user/chat/chat.component').then(m => m.ChatComponent), canActivate: [userGuard] },
+  // Export
+  { path: 'user/export', loadComponent: () => import('./components/user/export-responses/export-responses.component').then(m => m.ExportResponsesComponent), canActivate: [userGuard] },
+  // Quiz
+  { path: 'user/quiz', loadComponent: () => import('./components/user/quiz-list/quiz-list.component').then(m => m.QuizListComponent), canActivate: [userGuard] },
+  { path: 'user/quiz/generate', loadComponent: () => import('./components/user/generate-quiz/generate-quiz.component').then(m => m.GenerateQuizComponent), canActivate: [userGuard] },
+  { path: 'user/quiz/:id/results', loadComponent: () => import('./components/user/quiz-results/quiz-results.component').then(m => m.QuizResultsComponent), canActivate: [userGuard] },
+  { path: 'user/quiz/:id', loadComponent: () => import('./components/user/take-quiz/take-quiz.component').then(m => m.TakeQuizComponent), canActivate: [userGuard] },
   { path: '**', redirectTo: '' }
 ];

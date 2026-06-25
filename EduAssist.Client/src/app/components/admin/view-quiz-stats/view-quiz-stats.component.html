@@ -1,0 +1,109 @@
+<app-admin-navbar></app-admin-navbar>
+<div class="content-wrapper">
+  <div class="page-header"><h2><i class="fas fa-brain me-2"></i>Quiz Statistics</h2></div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4" *ngIf="stats">
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-clipboard-list fa-2x text-primary mb-2"></i>
+          <h4 class="mb-0">{{ stats.totalQuizzes }}</h4>
+          <small class="text-muted">Total Quizzes</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+          <h4 class="mb-0">{{ stats.averageScore }}%</h4>
+          <small class="text-muted">Average Score</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-tags fa-2x text-info mb-2"></i>
+          <h4 class="mb-0">{{ stats.quizzesByCategory.length }}</h4>
+          <small class="text-muted">Categories</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-trophy fa-2x text-warning mb-2"></i>
+          <h4 class="mb-0">{{ stats.topPerformers.length }}</h4>
+          <small class="text-muted">Top Performers</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quizzes by Category -->
+  <div class="row mb-4" *ngIf="stats">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="fas fa-tags me-2"></i>Quizzes by Category</h6></div>
+        <div class="card-body">
+          <div *ngIf="stats.quizzesByCategory.length === 0" class="text-muted">No data available</div>
+          <div *ngFor="let cat of stats.quizzesByCategory" class="d-flex justify-content-between align-items-center mb-2">
+            <span>{{ cat.categoryName }}</span>
+            <span class="badge bg-primary">{{ cat.count }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header"><h6 class="mb-0"><i class="fas fa-trophy me-2"></i>Top Performers</h6></div>
+        <div class="card-body">
+          <div *ngIf="stats.topPerformers.length === 0" class="text-muted">No data available</div>
+          <div *ngFor="let tp of stats.topPerformers" class="d-flex justify-content-between align-items-center mb-2">
+            <span>{{ tp.userName }} <small class="text-muted">({{ tp.quizzesTaken }} quizzes)</small></span>
+            <span class="badge bg-success">{{ tp.averageScore }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Quizzes Table -->
+  <div class="card">
+    <div class="card-header"><h6 class="mb-0"><i class="fas fa-list me-2"></i>All Quizzes</h6></div>
+    <div class="card-body">
+      <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
+      <div *ngIf="!loading">
+        <div *ngIf="quizzes.length === 0" class="empty-state"><i class="fas fa-inbox"></i><p>No quizzes found</p></div>
+        <div class="table-responsive" *ngIf="quizzes.length > 0">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>User</th>
+                <th>Category</th>
+                <th>Questions</th>
+                <th>Difficulty</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let q of quizzes">
+                <td>{{ q.title | slice:0:50 }}</td>
+                <td>{{ q.userName }}</td>
+                <td><span class="badge bg-primary">{{ q.categoryName }}</span></td>
+                <td>{{ q.totalQuestions }}</td>
+                <td><span class="badge" [ngClass]="{'bg-success': q.difficulty === 'Easy', 'bg-warning': q.difficulty === 'Medium', 'bg-danger': q.difficulty === 'Hard'}">{{ q.difficulty }}</span></td>
+                <td>{{ q.createdAt | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

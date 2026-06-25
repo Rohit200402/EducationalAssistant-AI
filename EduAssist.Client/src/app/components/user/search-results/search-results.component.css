@@ -1,0 +1,5 @@
+.content-wrapper { padding: 30px; min-height: calc(100vh - 120px); }
+.page-header { margin-bottom: 25px; }
+.page-header h2 { color: #333; font-weight: 600; }
+.result-card { cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
+.result-card:hover { transform: translateX(5px); border-left-color: #4a90d9; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }

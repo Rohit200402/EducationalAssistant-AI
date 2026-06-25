@@ -1,0 +1,39 @@
+<app-user-navbar></app-user-navbar>
+<div class="content-wrapper">
+  <div class="page-header d-flex justify-content-between align-items-center">
+    <h2><i class="fas fa-comments me-2"></i>My Conversations</h2>
+    <button class="btn btn-primary" (click)="newConversation()"><i class="fas fa-plus me-1"></i>New Conversation</button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+
+  <div *ngIf="!loading && conversations.length === 0" class="text-center py-5">
+    <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+    <p class="text-muted">No conversations yet. Start a new chat!</p>
+    <button class="btn btn-primary" (click)="newConversation()"><i class="fas fa-plus me-1"></i>Start Conversation</button>
+  </div>
+
+  <div *ngIf="!loading && conversations.length > 0">
+    <div *ngFor="let c of conversations" class="card mb-3 conversation-card" (click)="openChat(c.conversationId)">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="mb-1"><i class="fas fa-comment-dots me-2 text-primary"></i>{{ c.title }}</h6>
+          <small class="text-muted"><span class="badge bg-primary me-2">{{ c.categoryName }}</span>{{ c.updatedAt | date:'medium' }}</small>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-info badge-messages">{{ c.messageCount }} messages</span>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteConversation($event, c.conversationId)"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <nav *ngIf="totalPages > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="pageNumber === 1"><a class="page-link" (click)="changePage(pageNumber - 1)">Previous</a></li>
+        <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" [class.active]="pageNumber === i + 1"><a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a></li>
+        <li class="page-item" [class.disabled]="pageNumber === totalPages"><a class="page-link" (click)="changePage(pageNumber + 1)">Next</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<app-footer></app-footer>

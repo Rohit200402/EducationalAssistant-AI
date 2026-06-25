@@ -1,0 +1,9 @@
+.content-wrapper { padding: 30px; min-height: calc(100vh - 120px); }
+.page-header { margin-bottom: 25px; }
+.page-header h2 { color: #333; font-weight: 600; }
+.question-card { border-left: 3px solid #4a90d9; }
+.option-btn { width: 100%; text-align: left; padding: 10px 15px; margin-bottom: 8px; border-radius: 8px; transition: all 0.2s; }
+.option-btn:hover { background: #e8f0fe; }
+.option-btn.selected { background: #4a90d9; color: white; border-color: #4a90d9; }
+.progress-bar-wrapper { height: 6px; background: #e9ecef; border-radius: 3px; margin-bottom: 20px; }
+.progress-bar-inner { height: 100%; background: #4a90d9; border-radius: 3px; transition: width 0.3s; }
