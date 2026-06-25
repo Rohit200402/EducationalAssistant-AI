@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { QuizList, QuizDetail, QuizGenerate, QuizSubmit, QuizResult } from '../models/quiz.model';
+import { QuizList, QuizDetail, QuizGenerate, QuizSubmit, QuizResult, AdminQuizList, QuizStats } from '../models/quiz.model';
 import { PaginatedResponse } from '../models/paginated-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -29,5 +29,14 @@ export class QuizService {
 
   getResults(quizId: number): Observable<QuizResult> {
     return this.http.get<QuizResult>(`${this.apiUrl}/${quizId}/results`);
+  }
+
+  getAllAdmin(pageNumber = 1, pageSize = 10): Observable<PaginatedResponse<AdminQuizList>> {
+    const params = new HttpParams().set('pageNumber', pageNumber).set('pageSize', pageSize);
+    return this.http.get<PaginatedResponse<AdminQuizList>>(`${this.apiUrl}/all`, { params });
+  }
+
+  getStats(): Observable<QuizStats> {
+    return this.http.get<QuizStats>(`${this.apiUrl}/stats`);
   }
 }

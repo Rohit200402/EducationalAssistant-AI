@@ -16,6 +16,14 @@
           <input type="text" class="form-control" [(ngModel)]="topic" name="topic" required placeholder="e.g., Photosynthesis, Newton's Laws, SQL Joins">
         </div>
         <div class="mb-3">
+          <label class="form-label">Difficulty</label>
+          <select class="form-select" [(ngModel)]="difficulty" name="difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <div class="mb-3">
           <label class="form-label">Number of Questions</label>
           <select class="form-select" [(ngModel)]="numberOfQuestions" name="numberOfQuestions">
             <option [value]="3">3 Questions</option>

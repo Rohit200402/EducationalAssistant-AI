@@ -96,4 +96,34 @@ public class ConversationsController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
+    [HttpGet("all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<PaginatedResponse<AdminConversationListDto>>> GetAllAdmin([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? search = null)
+    {
+        var query = _context.Conversations.Include(c => c.Category).Include(c => c.Messages).AsQueryable();
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(c => c.Title.Contains(search) || c.Category.SubjectName.Contains(search));
+        }
+        var totalCount = await query.CountAsync();
+        var items = await query.OrderByDescending(c => c.UpdatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .Select(c => new AdminConversationListDto(c.ConversationId, c.Title,
+                _context.Users.Where(u => u.Id == c.UserId).Select(u => u.DisplayName).FirstOrDefault() ?? "Unknown",
+                c.Category.SubjectName, c.Messages.Count, c.CreatedAt, c.UpdatedAt, c.IsActive)).ToListAsync();
+        return Ok(new PaginatedResponse<AdminConversationListDto>(items, totalCount, pageNumber, pageSize));
+    }
+
+    [HttpGet("all/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<ConversationDetailDto>> GetByIdAdmin(int id)
+    {
+        var conversation = await _context.Conversations.Include(c => c.Category).Include(c => c.Messages.OrderBy(m => m.CreatedAt))
+            .FirstOrDefaultAsync(c => c.ConversationId == id);
+        if (conversation == null) return NotFound(new { message = "Conversation not found." });
+        var dto = new ConversationDetailDto(conversation.ConversationId, conversation.Title, conversation.Category.SubjectName, conversation.CategoryId,
+            conversation.CreatedAt, conversation.UpdatedAt, conversation.IsActive,
+            conversation.Messages.Select(m => new ConversationMessageDto(m.MessageId, m.Role, m.Content, m.CreatedAt)).ToList());
+        return Ok(dto);
+    }
 }

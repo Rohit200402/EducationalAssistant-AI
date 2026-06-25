@@ -21,7 +21,7 @@ public class QuizController : ControllerBase
     {
         try
         {
-            var result = await _quizService.GenerateQuizAsync(GetUserId(), dto.CategoryId, dto.Topic, dto.NumberOfQuestions);
+            var result = await _quizService.GenerateQuizAsync(GetUserId(), dto.CategoryId, dto.Topic, dto.NumberOfQuestions, dto.Difficulty);
             return Ok(result);
         }
         catch (Exception ex)
@@ -58,6 +58,22 @@ public class QuizController : ControllerBase
     {
         var result = await _quizService.GetQuizResultsAsync(id, GetUserId());
         if (result == null) return NotFound(new { message = "No results found for this quiz." });
+        return Ok(result);
+    }
+
+    [HttpGet("all")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<PaginatedResponse<AdminQuizListDto>>> GetAllAdmin([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    {
+        var result = await _quizService.GetAllQuizzesAsync(pageNumber, pageSize);
+        return Ok(result);
+    }
+
+    [HttpGet("stats")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<QuizStatsDto>> GetStats()
+    {
+        var result = await _quizService.GetQuizStatsAsync();
         return Ok(result);
     }
 }

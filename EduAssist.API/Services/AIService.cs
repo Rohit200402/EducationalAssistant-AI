@@ -72,7 +72,7 @@ public class AIService : IAIService
         catch (Exception ex) { _logger.LogError(ex, "AI conversation generation failed"); throw; }
     }
 
-    public async Task<string> GenerateQuizQuestionsAsync(string topic, string categoryName, int numberOfQuestions)
+    public async Task<string> GenerateQuizQuestionsAsync(string topic, string categoryName, int numberOfQuestions, string difficulty = "Medium")
     {
         var apiKey = _configuration["OpenAI:ApiKey"];
         if (string.IsNullOrEmpty(apiKey))
@@ -85,7 +85,7 @@ public class AIService : IAIService
         {
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            var prompt = $"Generate {numberOfQuestions} multiple choice questions about '{topic}' in the category '{categoryName}'. Return as JSON array with objects containing: questionText, optionA, optionB, optionC, optionD, correctOption (A/B/C/D), explanation. Only return the JSON array, no extra text.";
+            var prompt = $"Generate {numberOfQuestions} {difficulty}-difficulty multiple choice questions about '{topic}' in the category '{categoryName}'. Return as JSON array with objects containing: questionText, optionA, optionB, optionC, optionD, correctOption (A/B/C/D), explanation. Only return the JSON array, no extra text.";
             var body = new { model = _configuration["OpenAI:Model"] ?? "gpt-3.5-turbo", messages = new[] { new { role = "system", content = "You are an educational quiz generator. Always respond with valid JSON." }, new { role = "user", content = prompt } }, max_tokens = 3000, temperature = 0.7 };
             var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
             if (response.IsSuccessStatusCode)

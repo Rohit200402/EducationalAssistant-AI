@@ -19,6 +19,8 @@ export const routes: Routes = [
   { path: 'admin/categories/delete/:id', loadComponent: () => import('./components/admin/delete-category/delete-category.component').then(m => m.DeleteCategoryComponent), canActivate: [adminGuard] },
   { path: 'admin/requests', loadComponent: () => import('./components/admin/view-all-requests/view-all-requests.component').then(m => m.ViewAllRequestsComponent), canActivate: [adminGuard] },
   { path: 'admin/responses', loadComponent: () => import('./components/admin/view-all-responses/view-all-responses.component').then(m => m.ViewAllResponsesComponent), canActivate: [adminGuard] },
+  { path: 'admin/conversations', loadComponent: () => import('./components/admin/view-all-conversations/view-all-conversations.component').then(m => m.ViewAllConversationsComponent), canActivate: [adminGuard] },
+  { path: 'admin/quiz-stats', loadComponent: () => import('./components/admin/view-quiz-stats/view-quiz-stats.component').then(m => m.ViewQuizStatsComponent), canActivate: [adminGuard] },
   // User routes
   { path: 'user/dashboard', loadComponent: () => import('./components/user/user-dashboard/user-dashboard.component').then(m => m.UserDashboardComponent), canActivate: [userGuard] },
   { path: 'user/ask', loadComponent: () => import('./components/user/ask-question/ask-question.component').then(m => m.AskQuestionComponent), canActivate: [userGuard] },

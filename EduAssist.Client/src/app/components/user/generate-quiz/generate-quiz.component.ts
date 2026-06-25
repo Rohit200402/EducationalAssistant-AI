@@ -21,6 +21,7 @@ export class GenerateQuizComponent implements OnInit {
   selectedCategoryId = 0;
   topic = '';
   numberOfQuestions = 5;
+  difficulty = 'Medium';
   generating = false;
 
   constructor(private quizService: QuizService, private categoryService: CategoryService, private router: Router, private toast: ToastService) {}
@@ -30,7 +31,7 @@ export class GenerateQuizComponent implements OnInit {
   generate(): void {
     if (!this.selectedCategoryId || !this.topic.trim()) { this.toast.warning('Select a category and enter a topic'); return; }
     this.generating = true;
-    this.quizService.generate({ categoryId: this.selectedCategoryId, topic: this.topic, numberOfQuestions: this.numberOfQuestions }).subscribe({
+    this.quizService.generate({ categoryId: this.selectedCategoryId, topic: this.topic, numberOfQuestions: this.numberOfQuestions, difficulty: this.difficulty }).subscribe({
       next: (quiz) => { this.toast.success('Quiz generated!'); this.router.navigate(['/user/quiz', quiz.quizId]); },
       error: (err) => { this.generating = false; this.toast.error(err.error?.message || 'Failed to generate quiz'); }
     });

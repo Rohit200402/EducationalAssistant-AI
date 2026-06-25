@@ -10,11 +10,11 @@ public class QuizService : IQuizService
     private readonly IAIService _aiService;
     public QuizService(ApplicationDbContext context, IAIService aiService) { _context = context; _aiService = aiService; }
 
-    public async Task<QuizDetailDto> GenerateQuizAsync(string userId, int categoryId, string topic, int numberOfQuestions)
+    public async Task<QuizDetailDto> GenerateQuizAsync(string userId, int categoryId, string topic, int numberOfQuestions, string difficulty = "Medium")
     {
         var category = await _context.Categories.FindAsync(categoryId);
         var categoryName = category?.SubjectName ?? "General";
-        var jsonResponse = await _aiService.GenerateQuizQuestionsAsync(topic, categoryName, numberOfQuestions);
+        var jsonResponse = await _aiService.GenerateQuizQuestionsAsync(topic, categoryName, numberOfQuestions, difficulty);
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         var questions = JsonSerializer.Deserialize<List<QuizQuestionJson>>(jsonResponse, options) ?? new List<QuizQuestionJson>();
@@ -24,7 +24,8 @@ public class QuizService : IQuizService
             Title = $"{topic} - {categoryName} Quiz",
             CategoryId = categoryId,
             UserId = userId,
-            TotalQuestions = questions.Count
+            TotalQuestions = questions.Count,
+            Difficulty = difficulty
         };
         _context.Quizzes.Add(quiz);
         await _context.SaveChangesAsync();
@@ -46,7 +47,7 @@ public class QuizService : IQuizService
         await _context.SaveChangesAsync();
 
         var savedQuestions = await _context.QuizQuestions.Where(qq => qq.QuizId == quiz.QuizId).ToListAsync();
-        return new QuizDetailDto(quiz.QuizId, quiz.Title, categoryName, quiz.TotalQuestions, quiz.CreatedAt,
+        return new QuizDetailDto(quiz.QuizId, quiz.Title, categoryName, quiz.TotalQuestions, quiz.Difficulty, quiz.CreatedAt,
             savedQuestions.Select(qq => new QuizQuestionDto(qq.QuestionId, qq.QuestionText, qq.OptionA, qq.OptionB, qq.OptionC, qq.OptionD)).ToList());
     }
 
@@ -55,7 +56,7 @@ public class QuizService : IQuizService
         var query = _context.Quizzes.Include(q => q.Category).Where(q => q.UserId == userId);
         var totalCount = await query.CountAsync();
         var items = await query.OrderByDescending(q => q.CreatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
-            .Select(q => new QuizListDto(q.QuizId, q.Title, q.Category.SubjectName, q.TotalQuestions, q.CreatedAt)).ToListAsync();
+            .Select(q => new QuizListDto(q.QuizId, q.Title, q.Category.SubjectName, q.TotalQuestions, q.Difficulty, q.CreatedAt)).ToListAsync();
         return new PaginatedResponse<QuizListDto>(items, totalCount, pageNumber, pageSize);
     }
 
@@ -63,7 +64,7 @@ public class QuizService : IQuizService
     {
         var quiz = await _context.Quizzes.Include(q => q.Category).Include(q => q.Questions).FirstOrDefaultAsync(q => q.QuizId == quizId && q.UserId == userId);
         if (quiz == null) return null;
-        return new QuizDetailDto(quiz.QuizId, quiz.Title, quiz.Category.SubjectName, quiz.TotalQuestions, quiz.CreatedAt,
+        return new QuizDetailDto(quiz.QuizId, quiz.Title, quiz.Category.SubjectName, quiz.TotalQuestions, quiz.Difficulty, quiz.CreatedAt,
             quiz.Questions.Select(qq => new QuizQuestionDto(qq.QuestionId, qq.QuestionText, qq.OptionA, qq.OptionB, qq.OptionC, qq.OptionD)).ToList());
     }
 
@@ -116,6 +117,50 @@ public class QuizService : IQuizService
 
         var percentage = attempt.TotalQuestions > 0 ? (double)attempt.Score / attempt.TotalQuestions * 100 : 0;
         return new QuizResultDto(quiz.QuizId, quiz.Title, attempt.Score, attempt.TotalQuestions, Math.Round(percentage, 1), attempt.CompletedAt, resultQuestions);
+    }
+
+    public async Task<PaginatedResponse<AdminQuizListDto>> GetAllQuizzesAsync(int pageNumber, int pageSize)
+    {
+        var query = _context.Quizzes.Include(q => q.Category).AsQueryable();
+        var totalCount = await query.CountAsync();
+        var items = await query.OrderByDescending(q => q.CreatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
+            .Select(q => new AdminQuizListDto(q.QuizId, q.Title, q.Category.SubjectName,
+                _context.Users.Where(u => u.Id == q.UserId).Select(u => u.DisplayName).FirstOrDefault() ?? "Unknown",
+                q.TotalQuestions, q.Difficulty, q.CreatedAt)).ToListAsync();
+        return new PaginatedResponse<AdminQuizListDto>(items, totalCount, pageNumber, pageSize);
+    }
+
+    public async Task<QuizStatsDto> GetQuizStatsAsync()
+    {
+        var totalQuizzes = await _context.Quizzes.CountAsync();
+        var attempts = await _context.QuizAttempts.ToListAsync();
+        var averageScore = attempts.Count > 0 ? attempts.Average(a => a.TotalQuestions > 0 ? (double)a.Score / a.TotalQuestions * 100 : 0) : 0;
+
+        var quizzesByCategory = await _context.Quizzes.Include(q => q.Category)
+            .GroupBy(q => q.Category.SubjectName)
+            .Select(g => new QuizCategoryStatDto(g.Key, g.Count()))
+            .ToListAsync();
+
+        var topPerformers = await _context.QuizAttempts
+            .GroupBy(a => a.UserId)
+            .Select(g => new
+            {
+                UserId = g.Key,
+                QuizzesTaken = g.Count(),
+                AverageScore = g.Average(a => a.TotalQuestions > 0 ? (double)a.Score / a.TotalQuestions * 100 : 0)
+            })
+            .OrderByDescending(x => x.AverageScore)
+            .Take(5)
+            .ToListAsync();
+
+        var topPerformerDtos = new List<QuizTopPerformerDto>();
+        foreach (var tp in topPerformers)
+        {
+            var userName = await _context.Users.Where(u => u.Id == tp.UserId).Select(u => u.DisplayName).FirstOrDefaultAsync() ?? "Unknown";
+            topPerformerDtos.Add(new QuizTopPerformerDto(userName, tp.QuizzesTaken, Math.Round(tp.AverageScore, 1)));
+        }
+
+        return new QuizStatsDto(totalQuizzes, Math.Round(averageScore, 1), quizzesByCategory, topPerformerDtos);
     }
 
     private class QuizQuestionJson
