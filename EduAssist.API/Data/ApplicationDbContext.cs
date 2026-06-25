@@ -52,6 +52,7 @@ public class ApplicationDbContext : DbContext
         builder.Entity<Notification>().HasIndex(n => n.UserId);
 
         // StudyGoal
+        builder.Entity<StudyGoal>().HasKey(sg => sg.GoalId);
         builder.Entity<StudyGoal>().HasIndex(sg => sg.UserId).IsUnique();
     }
 }
