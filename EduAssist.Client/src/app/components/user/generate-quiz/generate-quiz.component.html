@@ -1,45 +1,74 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-magic me-2"></i>Generate Quiz</h2></div>
-  <div class="card">
-    <div class="card-body">
-      <form (ngSubmit)="generate()">
-        <div class="mb-3">
-          <label class="form-label">Category</label>
-          <select class="form-select" [(ngModel)]="selectedCategoryId" name="categoryId" required>
-            <option [value]="0" disabled>Select a category</option>
-            <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.subjectName }}</option>
-          </select>
+  <div class="page-header">
+    <h2>Generate Quiz</h2>
+    <p>Create a custom AI-powered quiz to test your knowledge</p>
+  </div>
+
+  <div class="form-card animate-fade-in">
+    <div class="form-card-icon"><i class="fas fa-magic"></i></div>
+    <form (ngSubmit)="generate()">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" [(ngModel)]="selectedCategoryId" name="categoryId" required>
+          <option [value]="0" disabled>Select a category</option>
+          <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.subjectName }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Topic</label>
+        <input type="text" class="form-control" [(ngModel)]="topic" name="topic" required placeholder="e.g., Photosynthesis, Newton's Laws, SQL Joins">
+        <span class="form-hint">Be specific for better quiz questions</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Difficulty</label>
+        <div class="difficulty-options">
+          <label class="difficulty-option" [class.active]="difficulty === 'Easy'">
+            <input type="radio" [(ngModel)]="difficulty" name="difficulty" value="Easy" hidden>
+            <i class="fas fa-leaf"></i>
+            <span>Easy</span>
+          </label>
+          <label class="difficulty-option" [class.active]="difficulty === 'Medium'">
+            <input type="radio" [(ngModel)]="difficulty" name="difficulty" value="Medium" hidden>
+            <i class="fas fa-bolt"></i>
+            <span>Medium</span>
+          </label>
+          <label class="difficulty-option" [class.active]="difficulty === 'Hard'">
+            <input type="radio" [(ngModel)]="difficulty" name="difficulty" value="Hard" hidden>
+            <i class="fas fa-fire"></i>
+            <span>Hard</span>
+          </label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Topic</label>
-          <input type="text" class="form-control" [(ngModel)]="topic" name="topic" required placeholder="e.g., Photosynthesis, Newton's Laws, SQL Joins">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Number of Questions</label>
+        <div class="question-count-options">
+          <label class="count-option" [class.active]="numberOfQuestions === 3">
+            <input type="radio" [(ngModel)]="numberOfQuestions" name="numberOfQuestions" [value]="3" hidden>
+            <span>3</span>
+          </label>
+          <label class="count-option" [class.active]="numberOfQuestions === 5">
+            <input type="radio" [(ngModel)]="numberOfQuestions" name="numberOfQuestions" [value]="5" hidden>
+            <span>5</span>
+          </label>
+          <label class="count-option" [class.active]="numberOfQuestions === 10">
+            <input type="radio" [(ngModel)]="numberOfQuestions" name="numberOfQuestions" [value]="10" hidden>
+            <span>10</span>
+          </label>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Difficulty</label>
-          <select class="form-select" [(ngModel)]="difficulty" name="difficulty">
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Number of Questions</label>
-          <select class="form-select" [(ngModel)]="numberOfQuestions" name="numberOfQuestions">
-            <option [value]="3">3 Questions</option>
-            <option [value]="5">5 Questions</option>
-            <option [value]="10">10 Questions</option>
-          </select>
-        </div>
-        <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary" [disabled]="generating">
-            <span *ngIf="generating" class="spinner-border spinner-border-sm me-1"></span>
-            <i *ngIf="!generating" class="fas fa-magic me-1"></i>{{ generating ? 'Generating...' : 'Generate Quiz' }}
-          </button>
-          <a routerLink="/user/quiz" class="btn btn-secondary">Cancel</a>
-        </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-generate" [disabled]="generating">
+          <span *ngIf="generating" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!generating" class="fas fa-magic me-1"></i>{{ generating ? 'Generating...' : 'Generate Quiz' }}
+        </button>
+        <a routerLink="/user/quiz" class="btn-cancel">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>
 <app-footer></app-footer>

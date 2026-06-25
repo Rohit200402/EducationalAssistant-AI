@@ -1,11 +1,18 @@
-<div *ngIf="show" class="modal-backdrop" (click)="cancel()"></div>
-<div *ngIf="show" class="modal-dialog-centered">
-  <div class="modal-content">
-    <div class="modal-header"><h5>{{ title }}</h5></div>
-    <div class="modal-body"><p>{{ message }}</p></div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
-      <button class="btn btn-danger" (click)="confirm()">Confirm</button>
+<div *ngIf="show" class="dialog-backdrop" (click)="cancel()"></div>
+<div *ngIf="show" class="dialog-container" role="dialog" aria-labelledby="dialog-title" aria-modal="true">
+  <div class="dialog-card">
+    <div class="dialog-header">
+      <div class="dialog-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3 id="dialog-title">{{ title }}</h3>
+    </div>
+    <div class="dialog-body">
+      <p>{{ message }}</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="dialog-btn dialog-btn-cancel" (click)="cancel()">Cancel</button>
+      <button class="dialog-btn dialog-btn-confirm" (click)="confirm()">Confirm</button>
     </div>
   </div>
 </div>

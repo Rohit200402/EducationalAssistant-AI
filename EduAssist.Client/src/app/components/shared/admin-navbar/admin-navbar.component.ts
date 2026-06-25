@@ -12,6 +12,21 @@ import { GlobalSearchComponent } from '../global-search/global-search.component'
   styleUrls: ['./admin-navbar.component.css']
 })
 export class AdminNavbarComponent {
+  sidebarOpen = false;
+
   constructor(public authService: AuthService) {}
-  logout(): void { this.authService.logout(); }
+
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebarOnMobile(): void {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      this.sidebarOpen = false;
+    }
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

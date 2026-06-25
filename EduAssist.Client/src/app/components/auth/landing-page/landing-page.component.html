@@ -1,65 +1,141 @@
 <div class="landing-page">
-  <nav class="navbar navbar-expand-lg navbar-dark landing-nav">
-    <div class="container">
-      <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>EduAssist</a>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link btn btn-outline-light me-2 px-3" routerLink="/login">Login</a>
-        <a class="nav-link btn btn-light text-primary px-3" routerLink="/register">Get Started</a>
+  <!-- Navigation -->
+  <nav class="landing-nav">
+    <div class="nav-container">
+      <a class="nav-brand" href="#">
+        <span class="brand-icon"><i class="fas fa-graduation-cap"></i></span>
+        <span class="brand-text">EduAssist</span>
+      </a>
+      <div class="nav-actions">
+        <a class="nav-link-btn" routerLink="/login">Login</a>
+        <a class="nav-cta-btn" routerLink="/register">Get Started</a>
       </div>
     </div>
   </nav>
 
+  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="container">
-      <div class="row align-items-center min-vh-75">
-        <div class="col-lg-6">
-          <h1 class="hero-title">Learn Smarter with <span class="text-gradient">AI-Powered</span> Education</h1>
-          <p class="hero-subtitle">Get instant, personalized answers to your educational questions. Track your progress, bookmark insights, and accelerate your learning journey.</p>
-          <div class="hero-buttons">
-            <a routerLink="/register" class="btn btn-lg btn-light me-3"><i class="fas fa-rocket me-2"></i>Start Learning</a>
-            <a routerLink="/login" class="btn btn-lg btn-outline-light"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a>
+    <div class="hero-bg-elements">
+      <div class="hero-blob hero-blob-1"></div>
+      <div class="hero-blob hero-blob-2"></div>
+      <div class="hero-blob hero-blob-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Learn Smarter with <span class="text-gradient">AI-Powered</span> Education</h1>
+        <p class="hero-subtitle">Get instant, personalized answers to your educational questions. Track your progress, bookmark insights, and accelerate your learning journey with intelligent assistance.</p>
+        <div class="hero-buttons">
+          <a routerLink="/register" class="btn-hero-primary"><i class="fas fa-rocket me-2"></i>Start Learning Free</a>
+          <a routerLink="/login" class="btn-hero-secondary"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-value">AI-Powered</span>
+            <span class="stat-label">Instant Answers</span>
           </div>
-          <div class="hero-stats mt-4">
-            <div class="stat"><strong>AI-Powered</strong><span>Instant Answers</span></div>
-            <div class="stat"><strong>20+</strong><span>Subject Categories</span></div>
-            <div class="stat"><strong>24/7</strong><span>Available</span></div>
+          <div class="stat-item">
+            <span class="stat-value">20+</span>
+            <span class="stat-label">Subject Categories</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">Always Available</span>
           </div>
         </div>
-        <div class="col-lg-6 text-center">
-          <div class="hero-illustration"><i class="fas fa-robot"></i></div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-illustration-card">
+          <div class="illustration-glow"></div>
+          <i class="fas fa-robot"></i>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Features Section -->
   <section class="features-section">
-    <div class="container">
-      <h2 class="text-center mb-5">Why Choose EduAssist?</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-brain"></i></div><h4>AI-Powered Answers</h4><p>Get detailed, accurate responses to your questions using advanced AI technology.</p></div>
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Features</span>
+        <h2 class="section-title">Why Choose EduAssist?</h2>
+        <p class="section-subtitle">Everything you need to supercharge your learning experience</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-brain"></i></div>
+          <h4>AI-Powered Answers</h4>
+          <p>Get detailed, accurate responses to your questions using advanced AI technology.</p>
         </div>
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h4>Progress Tracking</h4><p>Monitor your learning streaks, view analytics, and track improvement over time.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+          <h4>Progress Tracking</h4>
+          <p>Monitor your learning streaks, view analytics, and track improvement over time.</p>
         </div>
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-bookmark"></i></div><h4>Smart Bookmarks</h4><p>Save important responses with notes for quick reference and revision.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-bookmark"></i></div>
+          <h4>Smart Bookmarks</h4>
+          <p>Save important responses with notes for quick reference and revision.</p>
         </div>
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-layer-group"></i></div><h4>Multi-Subject</h4><p>From Mathematics to Literature, get help across all educational subjects.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+          <h4>Multi-Subject</h4>
+          <p>From Mathematics to Literature, get help across all educational subjects.</p>
         </div>
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-globe"></i></div><h4>Multi-Language</h4><p>Get responses in your preferred language for better understanding.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-globe"></i></div>
+          <h4>Multi-Language</h4>
+          <p>Get responses in your preferred language for better understanding.</p>
         </div>
-        <div class="col-md-4">
-          <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h4>Safe & Secure</h4><p>Your data is protected with industry-standard security measures.</p></div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Safe &amp; Secure</h4>
+          <p>Your data is protected with industry-standard security measures.</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">How It Works</span>
+        <h2 class="section-title">Get Started in 3 Simple Steps</h2>
+        <p class="section-subtitle">From sign-up to answers in minutes</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h4>Create Your Account</h4>
+          <p>Sign up in seconds with your email. Set your preferred subjects and language.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h4>Ask Your Question</h4>
+          <p>Type any educational question and get a detailed, AI-generated response instantly.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h4>Track &amp; Grow</h4>
+          <p>Bookmark answers, take quizzes, and monitor your learning progress over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <div class="cta-bg-element"></div>
+      <h2>Ready to Transform Your Learning?</h2>
+      <p>Join thousands of students who are learning smarter with AI-powered assistance.</p>
+      <a routerLink="/register" class="btn-cta"><i class="fas fa-rocket me-2"></i>Get Started Free</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
   <footer class="landing-footer">
-    <div class="container text-center">
+    <div class="footer-container">
       <p>&copy; 2025 EduAssist - AI Educational Assistant. Built for learners everywhere.</p>
     </div>
   </footer>

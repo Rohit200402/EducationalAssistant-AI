@@ -1,14 +1,60 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-eye me-2"></i>Response Detail</h2></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
-  <div *ngIf="!loading && request">
-    <div class="card mb-3"><div class="card-body"><h5><i class="fas fa-question-circle me-2 text-primary"></i>{{ request.query }}</h5><small class="text-muted">{{ request.categoryName }} | {{ request.requestedOn | date:'medium' }}</small></div></div>
-    <div class="d-flex justify-content-between mb-3"><h5>Responses ({{ responses.length }})</h5><button class="btn btn-outline-primary btn-sm" (click)="regenerate()" [disabled]="regenerating"><span *ngIf="regenerating" class="spinner-border spinner-border-sm me-1"></span><i *ngIf="!regenerating" class="fas fa-redo me-1"></i>Regenerate</button></div>
-    <div *ngFor="let r of responses" class="card mb-3"><div class="card-body">
-      <div class="d-flex justify-content-between"><small class="text-muted">{{ r.createdAt | date:'medium' }}</small><div class="d-flex gap-2"><app-export-button [responseId]="r.aiResponseId" label="Export" btnClass="btn-outline-secondary btn-sm"></app-export-button><button class="btn btn-sm btn-outline-warning" (click)="bookmark(r.aiResponseId)"><i class="fas fa-bookmark"></i></button></div></div>
-      <div class="markdown-content mt-2" [innerHTML]="r.response"></div>
-    </div></div>
+  <div class="page-header">
+    <h2>Response Detail</h2>
+    <p>View the full AI response to your question</p>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="detail-card">
+      <div class="detail-card-body">
+        <div class="skeleton skeleton-text" style="width: 80%; height: 20px; margin-bottom: 12px;"></div>
+        <div class="skeleton skeleton-text" style="width: 40%; height: 14px;"></div>
+      </div>
+    </div>
+    <div class="detail-card" style="margin-top: var(--space-4);">
+      <div class="detail-card-body">
+        <div class="skeleton skeleton-text" style="width: 100%; height: 16px; margin-bottom: 8px;" *ngFor="let s of [1,2,3,4,5]"></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && request" class="animate-fade-in">
+    <!-- Question Card -->
+    <div class="question-card">
+      <div class="question-card-icon"><i class="fas fa-question-circle"></i></div>
+      <div class="question-card-content">
+        <h5>{{ request.query }}</h5>
+        <div class="question-meta">
+          <span class="meta-badge">{{ request.categoryName }}</span>
+          <span class="meta-date">{{ request.requestedOn | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responses Header -->
+    <div class="responses-header">
+      <h5><i class="fas fa-robot me-2"></i>Responses ({{ responses.length }})</h5>
+      <button class="btn-regenerate" (click)="regenerate()" [disabled]="regenerating">
+        <span *ngIf="regenerating" class="spinner-border spinner-border-sm me-1"></span>
+        <i *ngIf="!regenerating" class="fas fa-redo me-1"></i>Regenerate
+      </button>
+    </div>
+
+    <!-- Response Cards -->
+    <div *ngFor="let r of responses" class="response-card">
+      <div class="response-card-header">
+        <div class="response-time"><i class="fas fa-clock me-1"></i>{{ r.createdAt | date:'medium' }}</div>
+        <div class="response-actions">
+          <app-export-button [responseId]="r.aiResponseId" label="Export" btnClass="btn-outline-secondary btn-sm"></app-export-button>
+          <button class="btn-bookmark" (click)="bookmark(r.aiResponseId)"><i class="fas fa-bookmark"></i></button>
+        </div>
+      </div>
+      <div class="response-content">
+        <div class="markdown-content" [innerHTML]="r.response"></div>
+      </div>
+    </div>
   </div>
 </div>
 <app-footer></app-footer>

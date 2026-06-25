@@ -1,30 +1,96 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-home me-2"></i>My Dashboard</h2><p>Welcome back! Here's your learning summary.</p></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
-  <div *ngIf="stats && !loading">
-    <div class="row g-4 mb-4">
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalQuestions }}</div><div class="stat-label"><i class="fas fa-question me-1"></i>Total Questions</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalBookmarks }}</div><div class="stat-label"><i class="fas fa-bookmark me-1"></i>Bookmarks</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.currentStreak }}</div><div class="stat-label"><i class="fas fa-fire me-1"></i>Day Streak</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.remainingQuota }}/{{ stats.dailyLimit }}</div><div class="stat-label"><i class="fas fa-battery-half me-1"></i>Remaining Today</div></div></div>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-8">
-        <div class="card"><div class="card-header"><h5><i class="fas fa-clock me-2"></i>Recent Questions</h5></div><div class="card-body">
-          <div *ngIf="stats.recentQuestions.length === 0" class="empty-state"><i class="fas fa-question-circle"></i><p>No questions yet. <a routerLink="/user/ask">Ask your first question!</a></p></div>
-          <div *ngFor="let q of stats.recentQuestions" class="d-flex justify-content-between align-items-center border-bottom py-2">
-            <div><strong>{{ q.query | slice:0:50 }}</strong><br><small class="text-muted">{{ q.categoryName }} - {{ q.requestedOn | date:'short' }}</small></div>
-            <span [class]="q.hasResponse ? 'badge bg-success' : 'badge bg-warning'">{{ q.hasResponse ? 'Answered' : 'Pending' }}</span>
-          </div>
-        </div></div>
+  <div class="page-header">
+    <h2>My Dashboard</h2>
+    <p>Welcome back! Here's your learning summary.</p>
+  </div>
+
+  <!-- Skeleton Loading State -->
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let s of [1,2,3,4]">
+        <div class="skeleton skeleton-icon"></div>
+        <div class="skeleton skeleton-text" style="width: 60%; height: 28px;"></div>
+        <div class="skeleton skeleton-text" style="width: 80%; height: 14px;"></div>
       </div>
-      <div class="col-md-4">
-        <div class="card"><div class="card-header"><h5><i class="fas fa-chart-pie me-2"></i>Top Categories</h5></div><div class="card-body">
-          <div *ngIf="stats.topCategories.length === 0" class="text-muted text-center p-3">No data yet</div>
-          <div *ngFor="let c of stats.topCategories" class="d-flex justify-content-between mb-2"><span>{{ c.categoryName }}</span><span class="badge bg-primary">{{ c.count }}</span></div>
-        </div></div>
-        <div class="card mt-3"><div class="card-body text-center"><a routerLink="/user/ask" class="btn btn-primary btn-lg w-100"><i class="fas fa-plus-circle me-2"></i>Ask a Question</a></div></div>
+    </div>
+    <div class="content-grid">
+      <div class="card"><div class="card-body"><div class="skeleton skeleton-text" style="width: 40%; height: 20px; margin-bottom: var(--space-4);"></div><div class="skeleton skeleton-text" style="width: 100%; height: 16px; margin-bottom: var(--space-2);" *ngFor="let s of [1,2,3]"></div></div></div>
+      <div class="card"><div class="card-body"><div class="skeleton skeleton-text" style="width: 50%; height: 20px; margin-bottom: var(--space-4);"></div><div class="skeleton skeleton-text" style="width: 100%; height: 16px; margin-bottom: var(--space-2);" *ngFor="let s of [1,2,3]"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="stats && !loading" class="animate-fade-in">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-primary"><i class="fas fa-question"></i></div>
+        <div class="stat-value">{{ stats.totalQuestions }}</div>
+        <div class="stat-label">Total Questions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-success"><i class="fas fa-bookmark"></i></div>
+        <div class="stat-value">{{ stats.totalBookmarks }}</div>
+        <div class="stat-label">Bookmarks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-warning"><i class="fas fa-fire"></i></div>
+        <div class="stat-value">{{ stats.currentStreak }}</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-info"><i class="fas fa-battery-half"></i></div>
+        <div class="stat-value">{{ stats.remainingQuota }}/{{ stats.dailyLimit }}</div>
+        <div class="stat-label">Remaining Today</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="card recent-questions-card">
+        <div class="card-header-custom">
+          <h5><i class="fas fa-clock me-2"></i>Recent Questions</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="stats.recentQuestions.length === 0" class="empty-state-inline">
+            <i class="fas fa-question-circle"></i>
+            <p>No questions yet. <a routerLink="/user/ask">Ask your first question!</a></p>
+          </div>
+          <div *ngFor="let q of stats.recentQuestions" class="question-item">
+            <div class="question-info">
+              <span class="question-text">{{ q.query | slice:0:50 }}</span>
+              <span class="question-meta">{{ q.categoryName }} &middot; {{ q.requestedOn | date:'short' }}</span>
+            </div>
+            <span [class]="q.hasResponse ? 'badge-status badge-status-success' : 'badge-status badge-status-warning'">{{ q.hasResponse ? 'Answered' : 'Pending' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-cards">
+        <div class="card">
+          <div class="card-header-custom">
+            <h5><i class="fas fa-chart-pie me-2"></i>Top Categories</h5>
+          </div>
+          <div class="card-body">
+            <div *ngIf="stats.topCategories.length === 0" class="text-center text-muted py-3">No data yet</div>
+            <div *ngFor="let c of stats.topCategories" class="category-item">
+              <span class="category-name">{{ c.categoryName }}</span>
+              <span class="category-count">{{ c.count }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card quick-action-card">
+          <div class="card-body">
+            <div class="quick-action-content">
+              <i class="fas fa-lightbulb quick-action-icon"></i>
+              <h6>Ready to learn?</h6>
+              <p>Ask the AI any educational question</p>
+              <a routerLink="/user/ask" class="btn-primary">
+                <i class="fas fa-plus-circle me-1"></i>Ask a Question
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -1,31 +1,83 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-chart-line me-2"></i>Progress Tracking</h2><p>Monitor your learning journey</p></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
-  <div *ngIf="stats && !loading">
-    <div class="row g-4 mb-4">
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.totalQuestions }}</div><div class="stat-label"><i class="fas fa-question me-1"></i>Total Questions</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.questionsThisWeek }}</div><div class="stat-label"><i class="fas fa-calendar-week me-1"></i>This Week</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.currentStreak }}</div><div class="stat-label"><i class="fas fa-fire me-1"></i>Current Streak</div></div></div>
-      <div class="col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.longestStreak }}</div><div class="stat-label"><i class="fas fa-trophy me-1"></i>Longest Streak</div></div></div>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="card"><div class="card-header"><h5><i class="fas fa-chart-pie me-2"></i>Category Breakdown</h5></div><div class="card-body">
-          <div *ngIf="stats.categoryBreakdown.length === 0" class="text-muted text-center p-3">No data yet</div>
-          <div *ngFor="let c of stats.categoryBreakdown" class="mb-3">
-            <div class="d-flex justify-content-between mb-1"><span>{{ c.categoryName }}</span><span>{{ c.questionCount }} ({{ c.percentage }}%)</span></div>
-            <div class="progress" style="height: 8px;"><div class="progress-bar" [style.width.%]="c.percentage" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div></div>
-          </div>
-        </div></div>
+  <div class="page-header">
+    <h2>Progress Tracking</h2>
+    <p>Monitor your learning journey</p>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let s of [1,2,3,4]">
+        <div class="skeleton skeleton-icon"></div>
+        <div class="skeleton skeleton-text" style="width: 50%; height: 24px; margin: 0 auto var(--space-2);"></div>
+        <div class="skeleton skeleton-text" style="width: 70%; height: 12px; margin: 0 auto;"></div>
       </div>
-      <div class="col-md-6">
-        <div class="card"><div class="card-header"><h5><i class="fas fa-history me-2"></i>Recent Activity</h5></div><div class="card-body">
-          <div *ngIf="stats.recentActivity.length === 0" class="text-muted text-center p-3">No activity yet</div>
-          <div *ngFor="let a of stats.recentActivity" class="d-flex justify-content-between border-bottom py-2">
-            <span>{{ a.date | date:'mediumDate' }}</span><span class="badge bg-primary">{{ a.questionCount }} questions</span>
+    </div>
+    <div class="analytics-grid">
+      <div class="analytics-card"><div class="analytics-card-body"><div class="skeleton skeleton-text" style="width: 40%; height: 20px; margin-bottom: 16px;"></div><div class="skeleton skeleton-text" style="width: 100%; height: 24px; margin-bottom: 12px;" *ngFor="let s of [1,2,3]"></div></div></div>
+      <div class="analytics-card"><div class="analytics-card-body"><div class="skeleton skeleton-text" style="width: 40%; height: 20px; margin-bottom: 16px;"></div><div class="skeleton skeleton-text" style="width: 100%; height: 24px; margin-bottom: 12px;" *ngFor="let s of [1,2,3]"></div></div></div>
+    </div>
+  </div>
+
+  <div *ngIf="stats && !loading" class="animate-fade-in">
+    <!-- Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-primary"><i class="fas fa-question"></i></div>
+        <div class="stat-value">{{ stats.totalQuestions }}</div>
+        <div class="stat-label">Total Questions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-info"><i class="fas fa-calendar-week"></i></div>
+        <div class="stat-value">{{ stats.questionsThisWeek }}</div>
+        <div class="stat-label">This Week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-warning"><i class="fas fa-fire"></i></div>
+        <div class="stat-value">{{ stats.currentStreak }}</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-success"><i class="fas fa-trophy"></i></div>
+        <div class="stat-value">{{ stats.longestStreak }}</div>
+        <div class="stat-label">Longest Streak</div>
+      </div>
+    </div>
+
+    <!-- Analytics Grid -->
+    <div class="analytics-grid">
+      <div class="analytics-card">
+        <div class="analytics-card-header">
+          <h5><i class="fas fa-chart-pie me-2"></i>Category Breakdown</h5>
+        </div>
+        <div class="analytics-card-body">
+          <div *ngIf="stats.categoryBreakdown.length === 0" class="empty-inline">No data yet</div>
+          <div *ngFor="let c of stats.categoryBreakdown" class="category-bar-item">
+            <div class="category-bar-header">
+              <span class="category-bar-name">{{ c.categoryName }}</span>
+              <span class="category-bar-value">{{ c.questionCount }} ({{ c.percentage }}%)</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="c.percentage"></div>
+            </div>
           </div>
-        </div></div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-header">
+          <h5><i class="fas fa-history me-2"></i>Recent Activity</h5>
+        </div>
+        <div class="analytics-card-body">
+          <div *ngIf="stats.recentActivity.length === 0" class="empty-inline">No activity yet</div>
+          <div *ngFor="let a of stats.recentActivity" class="activity-item">
+            <div class="activity-date">
+              <i class="fas fa-calendar me-2"></i>{{ a.date | date:'mediumDate' }}
+            </div>
+            <span class="activity-count">{{ a.questionCount }} questions</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

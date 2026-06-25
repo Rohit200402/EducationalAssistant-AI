@@ -1,3 +1,177 @@
-.card-header { background: white; border-bottom: 2px solid #e2e8f0; padding: 1rem 1.5rem; }
-.card-header h5 { margin: 0; font-weight: 600; color: #2d3748; }
-.progress { border-radius: 4px; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.stat-card {
+  background: white;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary-200);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+}
+
+.stat-icon-primary { background: var(--color-primary-50); color: var(--color-primary-600); }
+.stat-icon-info { background: var(--color-info-light); color: var(--color-info); }
+.stat-icon-warning { background: var(--color-warning-light); color: var(--color-warning); }
+.stat-icon-success { background: var(--color-success-light); color: var(--color-success); }
+
+.stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-neutral-900);
+  margin-bottom: var(--space-1);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+  font-weight: var(--font-medium);
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+@media (max-width: 768px) {
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+
+.analytics-card {
+  background: white;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.analytics-card-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.analytics-card-header h5 {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-neutral-800);
+}
+
+.analytics-card-body {
+  padding: var(--space-5);
+}
+
+.empty-inline {
+  text-align: center;
+  color: var(--color-neutral-400);
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.category-bar-item {
+  margin-bottom: var(--space-4);
+}
+
+.category-bar-item:last-child {
+  margin-bottom: 0;
+}
+
+.category-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.category-bar-name {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
+  font-weight: var(--font-medium);
+}
+
+.category-bar-value {
+  font-size: var(--text-xs);
+  color: var(--color-neutral-500);
+}
+
+.progress-track {
+  height: 8px;
+  background: var(--color-neutral-100);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-500), var(--color-primary-600));
+  border-radius: var(--radius-sm);
+  transition: width var(--transition-slow);
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-date {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-700);
+}
+
+.activity-count {
+  font-size: var(--text-xs);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-weight: var(--font-medium);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-50) 50%, var(--color-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  margin: 0 auto var(--space-3);
+}
+
+.skeleton-text { height: 14px; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
