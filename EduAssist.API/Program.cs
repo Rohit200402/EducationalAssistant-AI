@@ -10,15 +10,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Core DbContext (Business tables: Categories, UserRequests, AIResponses, Bookmarks)
+// Add DbContext (both Identity and Business tables in one database)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Auth DbContext (Identity tables only)
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection")));
-
-// Add Identity (using AuthDbContext for Identity storage)
+// Add Identity (using ApplicationDbContext for Identity storage)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -28,7 +24,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
 })
-.AddEntityFrameworkStores<AuthDbContext>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
 // Add JWT Authentication
@@ -101,9 +97,6 @@ var app = builder.Build();
 // Apply Migrations & Seed Data
 using (var scope = app.Services.CreateScope())
 {
-    var authContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-    await authContext.Database.MigrateAsync();
-
     var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     await appContext.Database.MigrateAsync();
 
