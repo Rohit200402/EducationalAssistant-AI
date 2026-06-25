@@ -18,8 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection")));
 
-// Add Identity (using AuthDbContext for Identity storage)
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+// Add Identity Core (using AuthDbContext for Identity storage)
+// Using AddIdentityCore instead of AddIdentity to avoid conflicts with JWT authentication
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -28,6 +29,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
 })
+.AddRoles<IdentityRole>()
+.AddSignInManager<SignInManager<ApplicationUser>>()
 .AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
 
