@@ -10,9 +10,16 @@ import { ToastService } from './services/toast.service';
   template: `
     <div class="toast-container">
       @for (toast of toastService.toasts; track toast.id) {
-        <div [class]="'toast-' + toast.type" (click)="toastService.remove(toast.id)">
-          <i [class]="toast.type === 'success' ? 'fas fa-check-circle' : toast.type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-exclamation-triangle'"></i>
-          {{ toast.message }}
+        <div class="toast-item" [ngClass]="'toast-' + toast.type">
+          <div class="toast-icon">
+            <i [class]="toast.type === 'success' ? 'fas fa-check' : toast.type === 'error' ? 'fas fa-xmark' : toast.type === 'info' ? 'fas fa-info' : 'fas fa-exclamation'"></i>
+          </div>
+          <div class="toast-content">
+            <span class="toast-message">{{ toast.message }}</span>
+          </div>
+          <button class="toast-close" (click)="toastService.remove(toast.id)">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       }
     </div>
