@@ -21,7 +21,7 @@ export class UserNavbarComponent {
   }
 
   closeSidebarOnMobile(): void {
-    if (window.innerWidth <= 768) {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
       this.sidebarOpen = false;
     }
   }

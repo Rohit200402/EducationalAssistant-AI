@@ -190,8 +190,8 @@ a:hover {
 
 .content-wrapper {
   max-width: var(--content-max-width);
-  margin: 0 auto;
   margin-left: var(--sidebar-width);
+  margin-right: auto;
   padding: var(--space-6) var(--space-8);
   min-height: calc(100vh - 80px);
 }
@@ -955,8 +955,8 @@ textarea.form-control {
 }
 
 /* Animation Utility Classes */
-.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
-.animate-fadeInUp { animation: fadeInUp 0.4s ease-out; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out; }
 .animate-slideInRight { animation: slideInRight 0.3s ease-out; }
 .animate-slideInDown { animation: slideInDown 0.3s ease-out; }
 .animate-scaleIn { animation: scaleIn 0.2s ease-out; }

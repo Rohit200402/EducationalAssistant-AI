@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,12 +13,22 @@ import { SearchResult } from '../../../models/search.model';
   styleUrls: ['./global-search.component.css']
 })
 export class GlobalSearchComponent {
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
   query = '';
   results: SearchResult[] = [];
   showDropdown = false;
   loading = false;
 
   constructor(private searchService: SearchService, private router: Router) {}
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardShortcut(event: KeyboardEvent): void {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+      event.preventDefault();
+      this.searchInput?.nativeElement?.focus();
+    }
+  }
 
   onSearch(): void {
     if (!this.query.trim()) { this.results = []; this.showDropdown = false; return; }
