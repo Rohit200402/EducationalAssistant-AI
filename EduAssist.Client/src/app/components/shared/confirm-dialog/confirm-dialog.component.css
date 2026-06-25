@@ -1,6 +1,137 @@
-.modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1040; }
-.modal-dialog-centered { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050; width: 400px; }
-.modal-content { border-radius: 12px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-.modal-header { border-bottom: 1px solid #eee; padding: 1.2rem; }
-.modal-body { padding: 1.5rem; }
-.modal-footer { border-top: 1px solid #eee; padding: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
+/* ============================================================
+   Confirm Dialog - Premium Modal
+   ============================================================ */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: calc(var(--z-modal) + 1);
+  padding: var(--space-4);
+  pointer-events: none;
+}
+
+.dialog-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-2xl);
+  pointer-events: auto;
+  animation: scaleIn 0.25s ease-out;
+  overflow: hidden;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dialog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-8) var(--space-6) var(--space-4);
+  text-align: center;
+}
+
+.dialog-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--color-warning-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.dialog-icon i {
+  font-size: var(--text-xl);
+  color: var(--color-warning);
+}
+
+.dialog-header h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-neutral-900);
+  margin: 0;
+}
+
+.dialog-body {
+  padding: 0 var(--space-6) var(--space-6);
+  text-align: center;
+}
+
+.dialog-body p {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-600);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-neutral-50);
+  border-top: 1px solid var(--color-neutral-100);
+}
+
+.dialog-btn {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  outline: none;
+}
+
+.dialog-btn-cancel {
+  background: white;
+  color: var(--color-neutral-700);
+  border: 1.5px solid var(--color-neutral-200);
+}
+
+.dialog-btn-cancel:hover {
+  background: var(--color-neutral-50);
+  border-color: var(--color-neutral-300);
+}
+
+.dialog-btn-confirm {
+  background: var(--color-danger);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.dialog-btn-confirm:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}

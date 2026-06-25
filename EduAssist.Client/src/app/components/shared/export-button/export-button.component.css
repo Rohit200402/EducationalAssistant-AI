@@ -1,6 +1,45 @@
-.btn {
-  transition: all 0.2s;
+/* ============================================================
+   Export Button - Clean Icon + Label Design
+   ============================================================ */
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 1.5px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  background: white;
+  color: var(--color-neutral-700);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  outline: none;
 }
-.btn:hover {
+
+.export-btn:hover {
+  border-color: var(--color-primary-300);
+  color: var(--color-primary-600);
+  background: var(--color-primary-50);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.export-btn:active {
+  transform: translateY(0);
+}
+
+.export-icon {
+  font-size: var(--text-xs);
+  transition: transform var(--transition-fast);
+}
+
+.export-btn:hover .export-icon {
+  transform: translateY(1px);
+}
+
+.export-label {
+  white-space: nowrap;
 }
