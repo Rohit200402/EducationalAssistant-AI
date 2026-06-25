@@ -1,37 +1,53 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header d-flex justify-content-between align-items-center">
-    <h2><i class="fas fa-brain me-2"></i>My Quizzes</h2>
-    <button class="btn btn-primary" (click)="generateNew()"><i class="fas fa-plus me-1"></i>Generate New Quiz</button>
+  <div class="page-header">
+    <div class="page-header-content">
+      <h2>My Quizzes</h2>
+      <p>Test your knowledge with AI-generated quizzes</p>
+    </div>
+    <button class="btn-primary-action" (click)="generateNew()"><i class="fas fa-plus me-1"></i>Generate New Quiz</button>
   </div>
 
-  <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
-
-  <div *ngIf="!loading && quizzes.length === 0" class="text-center py-5">
-    <i class="fas fa-brain fa-3x text-muted mb-3"></i>
-    <p class="text-muted">No quizzes yet. Generate your first quiz!</p>
-    <button class="btn btn-primary" (click)="generateNew()"><i class="fas fa-plus me-1"></i>Generate Quiz</button>
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="quiz-card" *ngFor="let s of [1,2,3]">
+      <div class="quiz-card-body">
+        <div class="skeleton skeleton-text" style="width: 60%; height: 16px; margin-bottom: 8px;"></div>
+        <div class="skeleton skeleton-text" style="width: 40%; height: 12px;"></div>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="!loading && quizzes.length > 0">
-    <div *ngFor="let q of quizzes" class="card mb-3 quiz-card">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <div>
-          <h6 class="mb-1"><i class="fas fa-clipboard-list me-2 text-primary"></i>{{ q.title }}</h6>
-          <small class="text-muted">
-            <span class="badge bg-primary me-2">{{ q.categoryName }}</span>
-            <span class="badge me-2" [ngClass]="{'bg-success': q.difficulty === 'Easy', 'bg-warning': q.difficulty === 'Medium', 'bg-danger': q.difficulty === 'Hard'}">{{ q.difficulty }}</span>
-            {{ q.totalQuestions }} questions | {{ q.createdAt | date:'mediumDate' }}
-          </small>
+  <!-- Empty State -->
+  <div *ngIf="!loading && quizzes.length === 0" class="empty-state animate-fade-in">
+    <div class="empty-state-icon"><i class="fas fa-brain"></i></div>
+    <h4>No quizzes yet</h4>
+    <p>Generate your first AI quiz to test your knowledge</p>
+    <button class="btn-primary-action" (click)="generateNew()"><i class="fas fa-plus me-1"></i>Generate Quiz</button>
+  </div>
+
+  <!-- Quiz List -->
+  <div *ngIf="!loading && quizzes.length > 0" class="animate-fade-in">
+    <div *ngFor="let q of quizzes" class="quiz-card">
+      <div class="quiz-card-body">
+        <div class="quiz-icon"><i class="fas fa-clipboard-list"></i></div>
+        <div class="quiz-info">
+          <h6 class="quiz-title">{{ q.title }}</h6>
+          <div class="quiz-meta">
+            <span class="quiz-badge-category">{{ q.categoryName }}</span>
+            <span class="quiz-badge-difficulty" [ngClass]="{'badge-easy': q.difficulty === 'Easy', 'badge-medium': q.difficulty === 'Medium', 'badge-hard': q.difficulty === 'Hard'}">{{ q.difficulty }}</span>
+            <span class="quiz-details">{{ q.totalQuestions }} questions</span>
+            <span class="quiz-date">{{ q.createdAt | date:'mediumDate' }}</span>
+          </div>
         </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-sm btn-outline-primary" (click)="openQuiz(q.quizId)"><i class="fas fa-play me-1"></i>Take</button>
-          <button class="btn btn-sm btn-outline-success" (click)="viewResults(q.quizId)"><i class="fas fa-chart-bar me-1"></i>Results</button>
+        <div class="quiz-actions">
+          <button class="btn-take" (click)="openQuiz(q.quizId)"><i class="fas fa-play me-1"></i>Take</button>
+          <button class="btn-results" (click)="viewResults(q.quizId)"><i class="fas fa-chart-bar me-1"></i>Results</button>
         </div>
       </div>
     </div>
 
-    <nav *ngIf="totalPages > 1">
+    <nav *ngIf="totalPages > 1" class="pagination-nav">
       <ul class="pagination justify-content-center">
         <li class="page-item" [class.disabled]="pageNumber === 1"><a class="page-link" (click)="changePage(pageNumber - 1)">Previous</a></li>
         <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index" [class.active]="pageNumber === i + 1"><a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a></li>

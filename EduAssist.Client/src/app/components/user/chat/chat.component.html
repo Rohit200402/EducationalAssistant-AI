@@ -1,53 +1,77 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
   <!-- New conversation form -->
-  <div *ngIf="isNew" class="card">
-    <div class="card-header"><h5><i class="fas fa-plus-circle me-2"></i>Start New Conversation</h5></div>
-    <div class="card-body">
-      <div class="mb-3"><label class="form-label">Title</label><input type="text" class="form-control" [(ngModel)]="newTitle" placeholder="e.g., Help with Calculus"></div>
-      <div class="mb-3"><label class="form-label">Category</label>
-        <select class="form-select" [(ngModel)]="selectedCategoryId">
-          <option [value]="0" disabled>Select a category</option>
-          <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.subjectName }}</option>
-        </select>
+  <div *ngIf="isNew" class="new-chat-wrapper animate-fade-in">
+    <div class="new-chat-card">
+      <div class="new-chat-header">
+        <div class="new-chat-icon"><i class="fas fa-plus-circle"></i></div>
+        <h4>Start New Conversation</h4>
+        <p>Choose a topic and begin chatting with AI</p>
       </div>
-      <button class="btn btn-primary" (click)="createConversation()"><i class="fas fa-play me-1"></i>Start Chat</button>
+      <div class="new-chat-body">
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" [(ngModel)]="newTitle" placeholder="e.g., Help with Calculus">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" [(ngModel)]="selectedCategoryId">
+            <option [value]="0" disabled>Select a category</option>
+            <option *ngFor="let c of categories" [value]="c.categoryId">{{ c.subjectName }}</option>
+          </select>
+        </div>
+        <button class="btn-start-chat" (click)="createConversation()"><i class="fas fa-play me-2"></i>Start Chat</button>
+      </div>
     </div>
   </div>
 
   <!-- Chat view -->
   <div *ngIf="!isNew">
-    <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
-    <div *ngIf="!loading && conversation" class="chat-container">
-      <div class="chat-header d-flex justify-content-between align-items-center">
-        <div>
-          <h5 class="mb-0"><i class="fas fa-comment-dots me-2"></i>{{ conversation.title }}</h5>
-          <small class="text-muted">{{ conversation.categoryName }}</small>
+    <div *ngIf="loading" class="chat-loading animate-fade-in">
+      <div class="skeleton skeleton-header"></div>
+      <div class="skeleton skeleton-messages"></div>
+      <div class="skeleton skeleton-input"></div>
+    </div>
+    <div *ngIf="!loading && conversation" class="chat-container animate-fade-in">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar"><i class="fas fa-comment-dots"></i></div>
+          <div>
+            <h5>{{ conversation.title }}</h5>
+            <span class="chat-category">{{ conversation.categoryName }}</span>
+          </div>
         </div>
-        <div class="d-flex gap-2">
+        <div class="chat-header-actions">
           <app-export-button [conversationId]="conversation.conversationId" label="Export" btnClass="btn-outline-secondary btn-sm"></app-export-button>
-          <a routerLink="/user/conversations" class="btn btn-outline-primary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back</a>
+          <a routerLink="/user/conversations" class="btn-back"><i class="fas fa-arrow-left me-1"></i>Back</a>
         </div>
       </div>
 
       <div class="messages-container" #messagesContainer>
-        <div *ngIf="messages.length === 0" class="text-center py-5"><p class="text-muted">Start the conversation by sending a message below.</p></div>
+        <div *ngIf="messages.length === 0" class="messages-empty">
+          <div class="messages-empty-icon"><i class="fas fa-comment-alt"></i></div>
+          <p>Start the conversation by sending a message below.</p>
+        </div>
         <div *ngFor="let msg of messages" class="message" [ngClass]="{'user-message': msg.role === 'user', 'assistant-message': msg.role === 'assistant'}">
           <div class="message-bubble">
-            <div class="message-role"><i class="fas me-1" [ngClass]="msg.role === 'user' ? 'fa-user' : 'fa-robot'"></i>{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}</div>
+            <div class="message-role">
+              <i class="fas me-1" [ngClass]="msg.role === 'user' ? 'fa-user' : 'fa-robot'"></i>{{ msg.role === 'user' ? 'You' : 'AI Assistant' }}
+            </div>
             <div class="message-content">{{ msg.content }}</div>
             <div class="message-time">{{ msg.createdAt | date:'shortTime' }}</div>
           </div>
         </div>
         <div *ngIf="sending" class="message assistant-message">
-          <div class="message-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
+          <div class="message-bubble typing-bubble">
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+          </div>
         </div>
       </div>
 
       <div class="chat-input">
-        <div class="input-group">
-          <input type="text" class="form-control" [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()" [disabled]="sending">
-          <button class="btn btn-primary" (click)="sendMessage()" [disabled]="sending || !newMessage.trim()"><i class="fas fa-paper-plane"></i></button>
+        <div class="input-wrapper">
+          <input type="text" class="message-input" [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()" [disabled]="sending">
+          <button class="btn-send" (click)="sendMessage()" [disabled]="sending || !newMessage.trim()"><i class="fas fa-paper-plane"></i></button>
         </div>
       </div>
     </div>

@@ -1,18 +1,54 @@
 <app-user-navbar></app-user-navbar>
 <div class="content-wrapper">
-  <div class="page-header"><h2><i class="fas fa-bookmark me-2"></i>My Bookmarks</h2></div>
-  <div class="mb-3"><app-search placeholder="Search bookmarks..." (searchChange)="onSearch($event)"></app-search></div>
-  <div *ngIf="loading" class="loading-spinner"><div class="spinner"></div></div>
-  <div *ngIf="!loading">
-    <div *ngIf="bookmarks.length === 0" class="empty-state"><i class="fas fa-bookmark"></i><p>No bookmarks yet</p></div>
-    <div *ngFor="let b of bookmarks" class="card mb-3"><div class="card-body">
-      <div class="d-flex justify-content-between"><small class="text-muted">{{ b.aiResponse?.categoryName }} | {{ b.bookmarkedOn | date:'short' }}</small>
-        <div><a [routerLink]="['/user/bookmarks/edit', b.bookmarkId]" class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></a><button class="btn btn-sm btn-outline-danger" (click)="delete(b.bookmarkId)"><i class="fas fa-trash"></i></button></div>
+  <div class="page-header">
+    <h2>My Bookmarks</h2>
+    <p>Your saved responses for quick reference</p>
+  </div>
+
+  <div class="search-section">
+    <app-search placeholder="Search bookmarks..." (searchChange)="onSearch($event)"></app-search>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading" class="animate-fade-in">
+    <div class="bookmark-card" *ngFor="let s of [1,2,3]">
+      <div class="bookmark-card-body">
+        <div class="skeleton skeleton-text" style="width: 30%; height: 12px; margin-bottom: 12px;"></div>
+        <div class="skeleton skeleton-text" style="width: 80%; height: 16px; margin-bottom: 8px;"></div>
+        <div class="skeleton skeleton-text" style="width: 100%; height: 14px;"></div>
       </div>
-      <p class="mb-1 mt-2"><strong>Q:</strong> {{ b.aiResponse?.query }}</p>
-      <p class="text-muted mb-1">{{ b.aiResponse?.response | slice:0:150 }}...</p>
-      <div *ngIf="b.notes" class="mt-2 p-2 bg-light rounded"><small><i class="fas fa-sticky-note me-1"></i>{{ b.notes }}</small></div>
-    </div></div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="animate-fade-in">
+    <!-- Empty State -->
+    <div *ngIf="bookmarks.length === 0" class="empty-state">
+      <div class="empty-state-icon"><i class="fas fa-bookmark"></i></div>
+      <h4>No bookmarks yet</h4>
+      <p>Bookmark AI responses to find them quickly later</p>
+    </div>
+
+    <!-- Bookmark Cards -->
+    <div *ngFor="let b of bookmarks" class="bookmark-card">
+      <div class="bookmark-card-body">
+        <div class="bookmark-top">
+          <div class="bookmark-meta">
+            <span class="bookmark-category">{{ b.aiResponse?.categoryName }}</span>
+            <span class="bookmark-date">{{ b.bookmarkedOn | date:'short' }}</span>
+          </div>
+          <div class="bookmark-actions">
+            <a [routerLink]="['/user/bookmarks/edit', b.bookmarkId]" class="btn-action-icon btn-edit"><i class="fas fa-edit"></i></a>
+            <button class="btn-action-icon btn-delete" (click)="delete(b.bookmarkId)"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+        <p class="bookmark-question"><strong>Q:</strong> {{ b.aiResponse?.query }}</p>
+        <p class="bookmark-preview">{{ b.aiResponse?.response | slice:0:150 }}...</p>
+        <div *ngIf="b.notes" class="bookmark-notes">
+          <i class="fas fa-sticky-note me-1"></i>{{ b.notes }}
+        </div>
+      </div>
+    </div>
+
     <app-pagination [currentPage]="currentPage" [totalPages]="totalPages" [totalCount]="totalCount" (pageChange)="onPageChange($event)"></app-pagination>
   </div>
 </div>
