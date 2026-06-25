@@ -16,6 +16,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Quiz> Quizzes { get; set; }
     public DbSet<QuizQuestion> QuizQuestions { get; set; }
     public DbSet<QuizAttempt> QuizAttempts { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<StudyGoal> StudyGoals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -40,5 +43,15 @@ public class ApplicationDbContext : DbContext
         builder.Entity<QuizAttempt>().HasKey(qa => qa.AttemptId);
         builder.Entity<QuizAttempt>().HasOne(qa => qa.Quiz).WithMany(q => q.Attempts).HasForeignKey(qa => qa.QuizId).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<QuizAttempt>().HasIndex(qa => qa.UserId);
+
+        // Rating relationships
+        builder.Entity<Rating>().HasOne(r => r.AIResponse).WithMany().HasForeignKey(r => r.AIResponseId);
+        builder.Entity<Rating>().HasIndex(r => new { r.UserId, r.AIResponseId }).IsUnique();
+
+        // Notification
+        builder.Entity<Notification>().HasIndex(n => n.UserId);
+
+        // StudyGoal
+        builder.Entity<StudyGoal>().HasIndex(sg => sg.UserId).IsUnique();
     }
 }

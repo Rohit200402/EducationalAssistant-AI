@@ -64,6 +64,32 @@
   margin: 0;
 }
 
+.responses-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-compare {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-neutral-600);
+  background: var(--color-neutral-100);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: var(--font-medium);
+  transition: all var(--transition-fast);
+}
+
+.btn-compare:hover, .btn-compare.active {
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  border-color: var(--color-primary-200);
+}
+
 .btn-regenerate {
   display: inline-flex;
   align-items: center;
@@ -102,6 +128,26 @@
   padding: var(--space-3) var(--space-5);
   background: var(--color-neutral-50);
   border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.response-version {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.version-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  background: var(--color-primary-600);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .response-time {
@@ -167,3 +213,58 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* Compare Mode */
+.compare-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.compare-panel {
+  background: white;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.compare-panel-header {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-neutral-50);
+  border-bottom: 1px solid var(--color-neutral-100);
+}
+
+.compare-select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  background: white;
+}
+
+.compare-panel-body {
+  padding: var(--space-4);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.compare-panel-body .markdown-content {
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+/* Response Card Footer (Rating) */
+.response-card-footer {
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--color-neutral-100);
+  background: var(--color-neutral-50);
+}
+
+@media (max-width: 768px) {
+  .compare-container {
+    grid-template-columns: 1fr;
+  }
+}
+

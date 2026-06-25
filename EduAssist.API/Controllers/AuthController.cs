@@ -49,6 +49,34 @@ public class AuthController : ControllerBase
         });
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return Ok(new { message = "If the email exists, a reset token has been generated.", token = "" });
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        return Ok(new { message = "Password reset token generated.", token });
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        if (request.NewPassword != request.ConfirmPassword)
+            return BadRequest(new { message = "Passwords do not match." });
+
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+            return BadRequest(new { message = "Invalid request." });
+
+        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        if (!result.Succeeded)
+            return BadRequest(new { message = string.Join(", ", result.Errors.Select(e => e.Description)) });
+
+        return Ok(new { message = "Password has been reset successfully." });
+    }
+
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
     {

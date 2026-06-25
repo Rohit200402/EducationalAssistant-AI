@@ -70,6 +70,23 @@ public class CategoriesController : ControllerBase
         return Ok(new CategoryDto(category.CategoryId, category.SubjectName, category.Description, category.SystemPrompt));
     }
 
+    [HttpPost("bulk")]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<List<CategoryDto>>> BulkCreate([FromBody] List<CategoryForCreate> dtos)
+    {
+        var created = new List<CategoryDto>();
+        foreach (var dto in dtos)
+        {
+            if (await _context.Categories.AnyAsync(c => c.SubjectName == dto.SubjectName))
+                continue;
+            var category = new Category { SubjectName = dto.SubjectName, Description = dto.Description, SystemPrompt = dto.SystemPrompt };
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync();
+            created.Add(new CategoryDto(category.CategoryId, category.SubjectName, category.Description, category.SystemPrompt));
+        }
+        return Ok(created);
+    }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)

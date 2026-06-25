@@ -7,6 +7,8 @@ export const routes: Routes = [
   { path: '', loadComponent: () => import('./components/auth/landing-page/landing-page.component').then(m => m.LandingPageComponent) },
   { path: 'login', loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./components/auth/register/register.component').then(m => m.RegisterComponent) },
+  { path: 'forgot-password', loadComponent: () => import('./components/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent) },
+  { path: 'reset-password', loadComponent: () => import('./components/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent) },
   // Admin routes
   { path: 'admin/dashboard', loadComponent: () => import('./components/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent), canActivate: [adminGuard] },
   { path: 'admin/users', loadComponent: () => import('./components/admin/view-users/view-users.component').then(m => m.ViewUsersComponent), canActivate: [adminGuard] },
@@ -17,6 +19,8 @@ export const routes: Routes = [
   { path: 'admin/categories/create', loadComponent: () => import('./components/admin/create-category/create-category.component').then(m => m.CreateCategoryComponent), canActivate: [adminGuard] },
   { path: 'admin/categories/edit/:id', loadComponent: () => import('./components/admin/edit-category/edit-category.component').then(m => m.EditCategoryComponent), canActivate: [adminGuard] },
   { path: 'admin/categories/delete/:id', loadComponent: () => import('./components/admin/delete-category/delete-category.component').then(m => m.DeleteCategoryComponent), canActivate: [adminGuard] },
+  { path: 'admin/categories/bulk', loadComponent: () => import('./components/admin/bulk-categories/bulk-categories.component').then(m => m.BulkCategoriesComponent), canActivate: [adminGuard] },
+  { path: 'admin/notifications/create', loadComponent: () => import('./components/admin/create-notification/create-notification.component').then(m => m.CreateNotificationComponent), canActivate: [adminGuard] },
   { path: 'admin/requests', loadComponent: () => import('./components/admin/view-all-requests/view-all-requests.component').then(m => m.ViewAllRequestsComponent), canActivate: [adminGuard] },
   { path: 'admin/responses', loadComponent: () => import('./components/admin/view-all-responses/view-all-responses.component').then(m => m.ViewAllResponsesComponent), canActivate: [adminGuard] },
   { path: 'admin/conversations', loadComponent: () => import('./components/admin/view-all-conversations/view-all-conversations.component').then(m => m.ViewAllConversationsComponent), canActivate: [adminGuard] },
@@ -31,6 +35,8 @@ export const routes: Routes = [
   { path: 'user/bookmarks/add/:responseId', loadComponent: () => import('./components/user/add-bookmark/add-bookmark.component').then(m => m.AddBookmarkComponent), canActivate: [userGuard] },
   { path: 'user/bookmarks/edit/:id', loadComponent: () => import('./components/user/edit-bookmark/edit-bookmark.component').then(m => m.EditBookmarkComponent), canActivate: [userGuard] },
   { path: 'user/progress', loadComponent: () => import('./components/user/progress-tracking/progress-tracking.component').then(m => m.ProgressTrackingComponent), canActivate: [userGuard] },
+  { path: 'user/leaderboard', loadComponent: () => import('./components/user/leaderboard/leaderboard.component').then(m => m.LeaderboardComponent), canActivate: [userGuard] },
+  { path: 'user/study-planner', loadComponent: () => import('./components/user/study-planner/study-planner.component').then(m => m.StudyPlannerComponent), canActivate: [userGuard] },
   { path: 'user/profile', loadComponent: () => import('./components/user/edit-profile/edit-profile.component').then(m => m.EditProfileComponent), canActivate: [authGuard] },
   // Search
   { path: 'user/search', loadComponent: () => import('./components/user/search-results/search-results.component').then(m => m.SearchResultsComponent), canActivate: [userGuard] },

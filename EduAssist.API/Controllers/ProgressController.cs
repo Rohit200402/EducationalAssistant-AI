@@ -1,6 +1,8 @@
 using EduAssist.API.Data;
 using EduAssist.API.DTOs;
+using EduAssist.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -13,7 +15,8 @@ namespace EduAssist.API.Controllers;
 public class ProgressController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    public ProgressController(ApplicationDbContext context) { _context = context; }
+    private readonly UserManager<ApplicationUser> _userManager;
+    public ProgressController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) { _context = context; _userManager = userManager; }
 
     private string GetUserId() => User.FindFirstValue("userId") ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
 
@@ -90,5 +93,39 @@ public class ProgressController : ControllerBase
             else current = 1;
         }
         return longest;
+    }
+
+    [HttpGet("leaderboard")]
+    public async Task<ActionResult<List<LeaderboardDto>>> GetLeaderboard()
+    {
+        var userGroups = await _context.UserRequests
+            .GroupBy(r => r.UserId)
+            .Select(g => new { UserId = g.Key, TotalQuestions = g.Count() })
+            .OrderByDescending(x => x.TotalQuestions)
+            .Take(10)
+            .ToListAsync();
+
+        var leaderboard = new List<LeaderboardDto>();
+        int rank = 1;
+        foreach (var ug in userGroups)
+        {
+            var user = await _userManager.FindByIdAsync(ug.UserId);
+            var topCategory = await _context.UserRequests
+                .Where(r => r.UserId == ug.UserId)
+                .GroupBy(r => r.Category.SubjectName)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefaultAsync() ?? "N/A";
+
+            leaderboard.Add(new LeaderboardDto
+            {
+                Rank = rank++,
+                DisplayName = user?.DisplayName ?? "Unknown",
+                TotalQuestions = ug.TotalQuestions,
+                TopCategory = topCategory
+            });
+        }
+
+        return Ok(leaderboard);
     }
 }

@@ -1,0 +1,14 @@
+<div class="star-rating-wrapper">
+  <div class="stars">
+    <i *ngFor="let star of [1, 2, 3, 4, 5]"
+       [class]="getStarClass(star)"
+       (mouseenter)="onStarHover(star)"
+       (mouseleave)="onStarLeave()"
+       (click)="onStarClick(star)"
+       [class.clickable]="!readonly">
+    </i>
+  </div>
+  <span class="rating-info" *ngIf="totalRatings > 0">
+    {{ averageRating | number:'1.1-1' }} ({{ totalRatings }})
+  </span>
+</div>

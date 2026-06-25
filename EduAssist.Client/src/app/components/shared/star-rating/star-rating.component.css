@@ -1,0 +1,36 @@
+.star-rating-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.stars i {
+  font-size: var(--text-lg);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.stars i.clickable {
+  cursor: pointer;
+}
+
+.stars i.clickable:hover {
+  transform: scale(1.2);
+}
+
+.star-filled {
+  color: #f59e0b;
+}
+
+.star-empty {
+  color: var(--color-neutral-400);
+}
+
+.rating-info {
+  font-size: var(--text-sm);
+  color: var(--color-neutral-500);
+}

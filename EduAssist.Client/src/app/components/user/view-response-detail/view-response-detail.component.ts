@@ -1,25 +1,60 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { ExportButtonComponent } from '../../shared/export-button/export-button.component';
+import { StarRatingComponent } from '../../shared/star-rating/star-rating.component';
+import { CopyButtonComponent } from '../../shared/copy-button/copy-button.component';
 import { UserRequestService } from '../../../services/user-request.service';
 import { AIResponseService } from '../../../services/ai-response.service';
 import { BookmarkService } from '../../../services/bookmark.service';
+import { RatingService } from '../../../services/rating.service';
 import { ToastService } from '../../../services/toast.service';
 import { UserRequest } from '../../../models/user-request.model';
 import { AIResponse } from '../../../models/ai-response.model';
 
-@Component({ selector: 'app-view-response-detail', standalone: true, imports: [CommonModule, RouterModule, UserNavbarComponent, FooterComponent, ExportButtonComponent], templateUrl: './view-response-detail.component.html', styleUrls: ['./view-response-detail.component.css'] })
+@Component({ selector: 'app-view-response-detail', standalone: true, imports: [CommonModule, FormsModule, RouterModule, UserNavbarComponent, FooterComponent, ExportButtonComponent, StarRatingComponent, CopyButtonComponent], templateUrl: './view-response-detail.component.html', styleUrls: ['./view-response-detail.component.css'] })
 export class ViewResponseDetailComponent implements OnInit {
   request: UserRequest | null = null; responses: AIResponse[] = []; loading = true; regenerating = false;
-  constructor(private route: ActivatedRoute, private requestService: UserRequestService, private aiResponseService: AIResponseService, private bookmarkService: BookmarkService, private toast: ToastService, private cdr: ChangeDetectorRef) {}
+  compareMode = false;
+  compareLeft: number = 0;
+  compareRight: number = 1;
+  ratings: { [key: number]: { average: number; total: number; user: number | null } } = {};
+
+  constructor(private route: ActivatedRoute, private requestService: UserRequestService, private aiResponseService: AIResponseService, private bookmarkService: BookmarkService, private ratingService: RatingService, private toast: ToastService, private cdr: ChangeDetectorRef) {}
   ngOnInit(): void {
     const id = +this.route.snapshot.paramMap.get('id')!;
     this.requestService.getById(id).subscribe(r => { this.request = r; this.cdr.detectChanges(); });
-    this.aiResponseService.getByRequest(id).subscribe({ next: (res) => { this.responses = res; this.loading = false; this.cdr.detectChanges(); }, error: () => { this.loading = false; } });
+    this.aiResponseService.getByRequest(id).subscribe({ next: (res) => { this.responses = res; this.loading = false; this.loadRatings(); this.cdr.detectChanges(); }, error: () => { this.loading = false; } });
   }
+
+  loadRatings(): void {
+    this.responses.forEach(r => {
+      this.ratingService.getForResponse(r.aiResponseId).subscribe({
+        next: (data) => { this.ratings[r.aiResponseId] = { average: data.averageRating, total: data.totalRatings, user: data.userRating }; this.cdr.detectChanges(); }
+      });
+    });
+  }
+
+  rateResponse(aiResponseId: number, value: number): void {
+    this.ratingService.rate({ aiResponseId, value }).subscribe({
+      next: () => {
+        this.ratings[aiResponseId] = { ...this.ratings[aiResponseId], user: value };
+        this.ratingService.getForResponse(aiResponseId).subscribe({
+          next: (data) => { this.ratings[aiResponseId] = { average: data.averageRating, total: data.totalRatings, user: data.userRating }; this.cdr.detectChanges(); }
+        });
+        this.toast.success('Rating saved!');
+      },
+      error: () => { this.toast.error('Failed to rate.'); }
+    });
+  }
+
+  toggleCompare(): void { this.compareMode = !this.compareMode; }
+
+  getVersionLabel(index: number): string { return `v${this.responses.length - index}`; }
+
   regenerate(): void {
     if (!this.request) return;
     this.regenerating = true;

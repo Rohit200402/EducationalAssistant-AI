@@ -51,9 +51,13 @@
             <h5>AI Response</h5>
             <span class="response-meta">Generated just now</span>
           </div>
+          <app-copy-button [text]="response.aiResponse?.response || ''" class="ms-auto"></app-copy-button>
         </div>
         <div class="response-body">
           <div class="markdown-content" [innerHTML]="response.aiResponse?.response"></div>
+        </div>
+        <div class="response-rating">
+          <app-star-rating [rating]="userRating" (ratingChange)="rateResponse($event)"></app-star-rating>
         </div>
       </div>
 

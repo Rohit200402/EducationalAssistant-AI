@@ -1,0 +1,31 @@
+<app-admin-navbar></app-admin-navbar>
+<div class="content-wrapper">
+  <div class="page-header">
+    <h2>Bulk Add Categories</h2>
+    <p>Add multiple categories at once by pasting JSON</p>
+  </div>
+
+  <div class="animate-fade-in">
+    <div class="form-card">
+      <div class="form-info">
+        <h5><i class="fas fa-info-circle me-2"></i>JSON Format</h5>
+        <pre class="format-example">[
+  {{ '{' }} "subjectName": "Physics", "description": "Study of matter", "systemPrompt": "" {{ '}' }},
+  {{ '{' }} "subjectName": "Chemistry", "description": "Study of substances", "systemPrompt": "" {{ '}' }}
+]</pre>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categories JSON</label>
+        <textarea class="form-control textarea-large" [(ngModel)]="jsonInput" rows="10" placeholder="Paste your JSON array here..."></textarea>
+      </div>
+      <button class="btn-submit" (click)="submit()" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+        <i *ngIf="!loading" class="fas fa-upload me-1"></i>{{ loading ? 'Processing...' : 'Import Categories' }}
+      </button>
+      <div *ngIf="createdCount > 0" class="success-message">
+        <i class="fas fa-check-circle me-1"></i>{{ createdCount }} categories were added successfully.
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
