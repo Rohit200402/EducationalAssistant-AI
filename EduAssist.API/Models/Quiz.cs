@@ -6,6 +6,7 @@ public class Quiz
     public int CategoryId { get; set; }
     public string UserId { get; set; } = string.Empty;
     public int TotalQuestions { get; set; }
+    public string Difficulty { get; set; } = "Medium";
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public Category Category { get; set; } = null!;
     public ICollection<QuizQuestion> Questions { get; set; } = new List<QuizQuestion>();

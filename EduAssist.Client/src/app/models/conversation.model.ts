@@ -34,3 +34,14 @@ export interface ConversationCreate {
 export interface ConversationSendMessage {
   content: string;
 }
+
+export interface AdminConversationList {
+  conversationId: number;
+  title: string;
+  userName: string;
+  categoryName: string;
+  messageCount: number;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+}

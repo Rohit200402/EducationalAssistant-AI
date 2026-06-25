@@ -3,6 +3,7 @@ export interface QuizList {
   title: string;
   categoryName: string;
   totalQuestions: number;
+  difficulty: string;
   createdAt: string;
 }
 
@@ -11,6 +12,7 @@ export interface QuizDetail {
   title: string;
   categoryName: string;
   totalQuestions: number;
+  difficulty: string;
   createdAt: string;
   questions: QuizQuestion[];
 }
@@ -28,6 +30,7 @@ export interface QuizGenerate {
   categoryId: number;
   topic: string;
   numberOfQuestions: number;
+  difficulty: string;
 }
 
 export interface QuizSubmit {
@@ -60,4 +63,32 @@ export interface QuizResultQuestion {
   selectedOption: string;
   explanation: string;
   isCorrect: boolean;
+}
+
+export interface AdminQuizList {
+  quizId: number;
+  title: string;
+  categoryName: string;
+  userName: string;
+  totalQuestions: number;
+  difficulty: string;
+  createdAt: string;
+}
+
+export interface QuizStats {
+  totalQuizzes: number;
+  averageScore: number;
+  quizzesByCategory: QuizCategoryStat[];
+  topPerformers: QuizTopPerformer[];
+}
+
+export interface QuizCategoryStat {
+  categoryName: string;
+  count: number;
+}
+
+export interface QuizTopPerformer {
+  userName: string;
+  quizzesTaken: number;
+  averageScore: number;
 }
