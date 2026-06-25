@@ -30,12 +30,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         // Conversation relationships
         builder.Entity<Conversation>().HasOne(c => c.Category).WithMany().HasForeignKey(c => c.CategoryId);
         builder.Entity<Conversation>().HasIndex(c => c.UserId);
+        builder.Entity<ConversationMessage>().HasKey(m => m.MessageId);
         builder.Entity<ConversationMessage>().HasOne(m => m.Conversation).WithMany(c => c.Messages).HasForeignKey(m => m.ConversationId).OnDelete(DeleteBehavior.Cascade);
 
         // Quiz relationships
         builder.Entity<Quiz>().HasOne(q => q.Category).WithMany().HasForeignKey(q => q.CategoryId);
         builder.Entity<Quiz>().HasIndex(q => q.UserId);
+        builder.Entity<QuizQuestion>().HasKey(qq => qq.QuestionId);
         builder.Entity<QuizQuestion>().HasOne(qq => qq.Quiz).WithMany(q => q.Questions).HasForeignKey(qq => qq.QuizId).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<QuizAttempt>().HasKey(qa => qa.AttemptId);
         builder.Entity<QuizAttempt>().HasOne(qa => qa.Quiz).WithMany(q => q.Attempts).HasForeignKey(qa => qa.QuizId).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<QuizAttempt>().HasIndex(qa => qa.UserId);
     }
