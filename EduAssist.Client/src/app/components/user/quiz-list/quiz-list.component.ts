@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -20,14 +20,14 @@ export class QuizListComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
 
-  constructor(private quizService: QuizService, private router: Router) {}
+  constructor(private quizService: QuizService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { this.loadQuizzes(); }
 
   loadQuizzes(): void {
     this.loading = true;
     this.quizService.getAll(this.pageNumber, this.pageSize).subscribe({
-      next: (res) => { this.quizzes = res.items; this.totalPages = res.totalPages; this.loading = false; },
+      next: (res) => { this.quizzes = res.items; this.totalPages = res.totalPages; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }

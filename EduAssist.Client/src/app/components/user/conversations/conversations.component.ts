@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -21,14 +21,14 @@ export class ConversationsComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
 
-  constructor(private conversationService: ConversationService, private router: Router, private toast: ToastService) {}
+  constructor(private conversationService: ConversationService, private router: Router, private toast: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { this.loadConversations(); }
 
   loadConversations(): void {
     this.loading = true;
     this.conversationService.getAll(this.pageNumber, this.pageSize).subscribe({
-      next: (res) => { this.conversations = res.items; this.totalPages = res.totalPages; this.loading = false; },
+      next: (res) => { this.conversations = res.items; this.totalPages = res.totalPages; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }
@@ -40,7 +40,7 @@ export class ConversationsComponent implements OnInit {
     event.stopPropagation();
     if (confirm('Delete this conversation?')) {
       this.conversationService.delete(id).subscribe({
-        next: () => { this.toast.success('Conversation deleted'); this.loadConversations(); },
+        next: () => { this.toast.success('Conversation deleted'); this.loadConversations(); this.cdr.detectChanges(); },
         error: () => this.toast.error('Failed to delete')
       });
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -21,15 +21,15 @@ export class AskQuestionComponent implements OnInit {
   error503 = false;
   failedRequestId = 0;
 
-  constructor(private requestService: UserRequestService, private categoryService: CategoryService, private bookmarkService: BookmarkService, private toast: ToastService, private router: Router) {}
+  constructor(private requestService: UserRequestService, private categoryService: CategoryService, private bookmarkService: BookmarkService, private toast: ToastService, private router: Router, private cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void { this.categoryService.getAllNoPagination().subscribe(c => this.categories = c); }
+  ngOnInit(): void { this.categoryService.getAllNoPagination().subscribe(c => { this.categories = c; this.cdr.detectChanges(); }); }
 
   submit(): void {
     if (!this.query.trim() || !this.categoryId) { this.toast.warning('Please fill in all fields.'); return; }
     this.loading = true; this.response = null; this.error503 = false;
     this.requestService.create({ query: this.query, categoryId: this.categoryId }).subscribe({
-      next: (res) => { this.loading = false; this.response = res; this.toast.success('Response generated!'); },
+      next: (res) => { this.loading = false; this.response = res; this.toast.success('Response generated!'); this.cdr.detectChanges(); },
       error: (err) => {
         this.loading = false;
         if (err.status === 429) { this.toast.error(err.error?.message || 'Daily limit reached.'); }
@@ -43,7 +43,7 @@ export class AskQuestionComponent implements OnInit {
     if (!this.failedRequestId) return;
     this.loading = true; this.error503 = false;
     this.requestService.regenerate(this.failedRequestId).subscribe({
-      next: (res) => { this.loading = false; this.response = { userRequestId: this.failedRequestId, query: this.query, categoryId: this.categoryId, userId: '', requestedOn: '', aiResponse: res }; this.toast.success('Response generated!'); },
+      next: (res) => { this.loading = false; this.response = { userRequestId: this.failedRequestId, query: this.query, categoryId: this.categoryId, userId: '', requestedOn: '', aiResponse: res }; this.toast.success('Response generated!'); this.cdr.detectChanges(); },
       error: () => { this.loading = false; this.error503 = true; this.toast.error('Still unavailable. Try later.'); }
     });
   }
@@ -51,7 +51,7 @@ export class AskQuestionComponent implements OnInit {
   bookmark(): void {
     if (!this.response?.aiResponse) return;
     this.bookmarkService.create({ aiResponseId: this.response.aiResponse.aiResponseId, notes: '' }).subscribe({
-      next: () => { this.toast.success('Bookmarked!'); },
+      next: () => { this.toast.success('Bookmarked!'); this.cdr.detectChanges(); },
       error: (err) => { this.toast.error(err.error?.message || 'Bookmark failed'); }
     });
   }

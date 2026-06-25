@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -22,14 +22,14 @@ export class ExportResponsesComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
 
-  constructor(private aiResponseService: AIResponseService, private exportService: ExportService, private toast: ToastService) {}
+  constructor(private aiResponseService: AIResponseService, private exportService: ExportService, private toast: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { this.loadResponses(); }
 
   loadResponses(): void {
     this.loading = true;
     this.aiResponseService.getMyResponses(this.pageNumber, this.pageSize).subscribe({
-      next: (res) => { this.responses = res.items; this.totalPages = res.totalPages; this.loading = false; },
+      next: (res) => { this.responses = res.items; this.totalPages = res.totalPages; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }

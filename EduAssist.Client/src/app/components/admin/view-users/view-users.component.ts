@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminNavbarComponent } from '../../shared/admin-navbar/admin-navbar.component';
@@ -23,13 +23,13 @@ export class ViewUsersComponent implements OnInit {
   totalCount = 0;
   search = '';
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef) {}
   ngOnInit(): void { this.loadUsers(); }
 
   loadUsers(): void {
     this.loading = true;
     this.userService.getAll(this.currentPage, 5, this.search).subscribe({
-      next: (res) => { this.users = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; },
+      next: (res) => { this.users = res.items; this.totalPages = res.totalPages; this.totalCount = res.totalCount; this.loading = false; this.cdr.detectChanges(); },
       error: () => { this.loading = false; }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
@@ -9,6 +9,6 @@ import { ProgressStats } from '../../../models/progress.model';
 @Component({ selector: 'app-progress-tracking', standalone: true, imports: [CommonModule, RouterModule, UserNavbarComponent, FooterComponent], templateUrl: './progress-tracking.component.html', styleUrls: ['./progress-tracking.component.css'] })
 export class ProgressTrackingComponent implements OnInit {
   stats: ProgressStats | null = null; loading = true;
-  constructor(private progressService: ProgressService) {}
-  ngOnInit(): void { this.progressService.getProgress().subscribe({ next: (data) => { this.stats = data; this.loading = false; }, error: () => { this.loading = false; } }); }
+  constructor(private progressService: ProgressService, private cdr: ChangeDetectorRef) {}
+  ngOnInit(): void { this.progressService.getProgress().subscribe({ next: (data) => { this.stats = data; this.loading = false; this.cdr.detectChanges(); }, error: () => { this.loading = false; } }); }
 }
