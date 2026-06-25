@@ -2,13 +2,15 @@ using System.Text.Json;
 using EduAssist.API.Data;
 using EduAssist.API.DTOs;
 using EduAssist.API.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace EduAssist.API.Services;
 public class QuizService : IQuizService
 {
     private readonly ApplicationDbContext _context;
     private readonly IAIService _aiService;
-    public QuizService(ApplicationDbContext context, IAIService aiService) { _context = context; _aiService = aiService; }
+    private readonly UserManager<ApplicationUser> _userManager;
+    public QuizService(ApplicationDbContext context, IAIService aiService, UserManager<ApplicationUser> userManager) { _context = context; _aiService = aiService; _userManager = userManager; }
 
     public async Task<QuizDetailDto> GenerateQuizAsync(string userId, int categoryId, string topic, int numberOfQuestions, string difficulty = "Medium")
     {
@@ -123,10 +125,13 @@ public class QuizService : IQuizService
     {
         var query = _context.Quizzes.Include(q => q.Category).AsQueryable();
         var totalCount = await query.CountAsync();
-        var items = await query.OrderByDescending(q => q.CreatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize)
-            .Select(q => new AdminQuizListDto(q.QuizId, q.Title, q.Category.SubjectName,
-                _context.Users.Where(u => u.Id == q.UserId).Select(u => u.DisplayName).FirstOrDefault() ?? "Unknown",
-                q.TotalQuestions, q.Difficulty, q.CreatedAt)).ToListAsync();
+        var quizzes = await query.OrderByDescending(q => q.CreatedAt).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        var items = new List<AdminQuizListDto>();
+        foreach (var q in quizzes)
+        {
+            var user = await _userManager.FindByIdAsync(q.UserId);
+            items.Add(new AdminQuizListDto(q.QuizId, q.Title, q.Category.SubjectName, user?.DisplayName ?? "Unknown", q.TotalQuestions, q.Difficulty, q.CreatedAt));
+        }
         return new PaginatedResponse<AdminQuizListDto>(items, totalCount, pageNumber, pageSize);
     }
 
@@ -156,8 +161,8 @@ public class QuizService : IQuizService
         var topPerformerDtos = new List<QuizTopPerformerDto>();
         foreach (var tp in topPerformers)
         {
-            var userName = await _context.Users.Where(u => u.Id == tp.UserId).Select(u => u.DisplayName).FirstOrDefaultAsync() ?? "Unknown";
-            topPerformerDtos.Add(new QuizTopPerformerDto(userName, tp.QuizzesTaken, Math.Round(tp.AverageScore, 1)));
+            var user = await _userManager.FindByIdAsync(tp.UserId);
+            topPerformerDtos.Add(new QuizTopPerformerDto(user?.DisplayName ?? "Unknown", tp.QuizzesTaken, Math.Round(tp.AverageScore, 1)));
         }
 
         return new QuizStatsDto(totalQuizzes, Math.Round(averageScore, 1), quizzesByCategory, topPerformerDtos);
