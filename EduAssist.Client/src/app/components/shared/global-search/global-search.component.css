@@ -1,0 +1,35 @@
+.global-search-wrapper {
+  position: relative;
+  width: 250px;
+}
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1050;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+.dropdown-item:hover {
+  background: #f8f9fa;
+}
+.result-title {
+  font-size: 0.85rem;
+  color: #333;
+}
+.input-group .form-control {
+  border-radius: 20px 0 0 20px;
+}
+.input-group .btn {
+  border-radius: 0 20px 20px 0;
+}

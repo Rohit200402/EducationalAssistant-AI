@@ -1,0 +1,13 @@
+namespace EduAssist.API.Models;
+public class Conversation
+{
+    public int ConversationId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public bool IsActive { get; set; } = true;
+    public Category Category { get; set; } = null!;
+    public ICollection<ConversationMessage> Messages { get; set; } = new List<ConversationMessage>();
+}

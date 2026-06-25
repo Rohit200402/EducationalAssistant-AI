@@ -51,6 +51,8 @@ builder.Services.AddAuthentication(options =>
 // Add Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAIService, AIService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddHttpClient();
 
 // Add CORS

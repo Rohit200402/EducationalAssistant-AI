@@ -66,7 +66,7 @@ public class UserRequestsController : ControllerBase
         // Try AI generation
         try
         {
-            var aiResponseText = await _aiService.GenerateResponseAsync(dto.Query, category.SubjectName, user.PreferredLanguage);
+            var aiResponseText = await _aiService.GenerateResponseAsync(dto.Query, category.SubjectName, user.PreferredLanguage, string.IsNullOrEmpty(category.SystemPrompt) ? null : category.SystemPrompt);
             var aiResponse = new AIResponse
             {
                 Response = aiResponseText,
@@ -116,7 +116,7 @@ public class UserRequestsController : ControllerBase
 
         try
         {
-            var aiResponseText = await _aiService.GenerateResponseAsync(userRequest.Query, userRequest.Category.SubjectName, user.PreferredLanguage);
+            var aiResponseText = await _aiService.GenerateResponseAsync(userRequest.Query, userRequest.Category.SubjectName, user.PreferredLanguage, string.IsNullOrEmpty(userRequest.Category.SystemPrompt) ? null : userRequest.Category.SystemPrompt);
             var aiResponse = new AIResponse
             {
                 Response = aiResponseText,

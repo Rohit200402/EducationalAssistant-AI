@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UserNavbarComponent } from '../../shared/user-navbar/user-navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
+import { ExportButtonComponent } from '../../shared/export-button/export-button.component';
 import { UserRequestService } from '../../../services/user-request.service';
 import { AIResponseService } from '../../../services/ai-response.service';
 import { BookmarkService } from '../../../services/bookmark.service';
@@ -10,7 +11,7 @@ import { ToastService } from '../../../services/toast.service';
 import { UserRequest } from '../../../models/user-request.model';
 import { AIResponse } from '../../../models/ai-response.model';
 
-@Component({ selector: 'app-view-response-detail', standalone: true, imports: [CommonModule, RouterModule, UserNavbarComponent, FooterComponent], templateUrl: './view-response-detail.component.html', styleUrls: ['./view-response-detail.component.css'] })
+@Component({ selector: 'app-view-response-detail', standalone: true, imports: [CommonModule, RouterModule, UserNavbarComponent, FooterComponent, ExportButtonComponent], templateUrl: './view-response-detail.component.html', styleUrls: ['./view-response-detail.component.css'] })
 export class ViewResponseDetailComponent implements OnInit {
   request: UserRequest | null = null; responses: AIResponse[] = []; loading = true; regenerating = false;
   constructor(private route: ActivatedRoute, private requestService: UserRequestService, private aiResponseService: AIResponseService, private bookmarkService: BookmarkService, private toast: ToastService) {}
