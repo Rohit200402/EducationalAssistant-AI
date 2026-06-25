@@ -12,7 +12,7 @@ import { ToastService } from './services/toast.service';
       @for (toast of toastService.toasts; track toast.id) {
         <div class="toast-item" [ngClass]="'toast-' + toast.type">
           <div class="toast-icon">
-            <i [class]="toast.type === 'success' ? 'fas fa-check' : toast.type === 'error' ? 'fas fa-xmark' : toast.type === 'info' ? 'fas fa-info' : 'fas fa-exclamation'"></i>
+            <i [class]="toast.type === 'success' ? 'fas fa-check' : toast.type === 'error' ? 'fas fa-xmark' : 'fas fa-exclamation'"></i>
           </div>
           <div class="toast-content">
             <span class="toast-message">{{ toast.message }}</span>
