@@ -10,11 +10,15 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
+// Add Core DbContext (Business tables: Categories, UserRequests, AIResponses, Bookmarks)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Identity
+// Add Auth DbContext (Identity tables only)
+builder.Services.AddDbContext<AuthDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection")));
+
+// Add Identity (using AuthDbContext for Identity storage)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -24,7 +28,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddEntityFrameworkStores<AuthDbContext>()
 .AddDefaultTokenProviders();
 
 // Add JWT Authentication
@@ -92,9 +96,15 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Seed Data
+// Apply Migrations & Seed Data
 using (var scope = app.Services.CreateScope())
 {
+    var authContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    await authContext.Database.MigrateAsync();
+
+    var appContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await appContext.Database.MigrateAsync();
+
     await DataSeeder.SeedAsync(scope.ServiceProvider);
 }
 
