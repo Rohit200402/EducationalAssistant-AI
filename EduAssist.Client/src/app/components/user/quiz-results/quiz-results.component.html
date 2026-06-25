@@ -1,0 +1,37 @@
+<app-user-navbar></app-user-navbar>
+<div class="content-wrapper">
+  <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+
+  <div *ngIf="!loading && result">
+    <div class="page-header"><h2><i class="fas fa-chart-bar me-2"></i>Quiz Results</h2></div>
+
+    <div class="card score-card mb-4">
+      <div class="score-value" [ngClass]="getScoreColor()">{{ result.percentage }}%</div>
+      <div class="score-label">{{ result.score }} / {{ result.totalQuestions }} correct</div>
+      <div class="mt-2"><small class="text-muted">{{ result.title }} | Completed: {{ result.completedAt | date:'medium' }}</small></div>
+    </div>
+
+    <h5 class="mb-3">Question Review</h5>
+    <div *ngFor="let q of result.questions; let i = index" class="card mb-3" [ngClass]="q.isCorrect ? 'correct-answer' : 'incorrect-answer'">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <h6>{{ i + 1 }}. {{ q.questionText }}</h6>
+          <span class="badge" [ngClass]="q.isCorrect ? 'bg-success' : 'bg-danger'">{{ q.isCorrect ? 'Correct' : 'Incorrect' }}</span>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-1" [class.text-success]="q.correctOption === 'A'" [class.fw-bold]="q.correctOption === 'A' || q.selectedOption === 'A'"><small><i class="fas me-1" [ngClass]="q.correctOption === 'A' ? 'fa-check' : (q.selectedOption === 'A' ? 'fa-times text-danger' : 'fa-circle')"></i>A: {{ q.optionA }}</small></div>
+          <div class="col-md-6 mb-1" [class.text-success]="q.correctOption === 'B'" [class.fw-bold]="q.correctOption === 'B' || q.selectedOption === 'B'"><small><i class="fas me-1" [ngClass]="q.correctOption === 'B' ? 'fa-check' : (q.selectedOption === 'B' ? 'fa-times text-danger' : 'fa-circle')"></i>B: {{ q.optionB }}</small></div>
+          <div class="col-md-6 mb-1" [class.text-success]="q.correctOption === 'C'" [class.fw-bold]="q.correctOption === 'C' || q.selectedOption === 'C'"><small><i class="fas me-1" [ngClass]="q.correctOption === 'C' ? 'fa-check' : (q.selectedOption === 'C' ? 'fa-times text-danger' : 'fa-circle')"></i>C: {{ q.optionC }}</small></div>
+          <div class="col-md-6 mb-1" [class.text-success]="q.correctOption === 'D'" [class.fw-bold]="q.correctOption === 'D' || q.selectedOption === 'D'"><small><i class="fas me-1" [ngClass]="q.correctOption === 'D' ? 'fa-check' : (q.selectedOption === 'D' ? 'fa-times text-danger' : 'fa-circle')"></i>D: {{ q.optionD }}</small></div>
+        </div>
+        <div class="mt-2 p-2 bg-light rounded"><small class="text-muted"><i class="fas fa-lightbulb me-1"></i>{{ q.explanation }}</small></div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <a routerLink="/user/quiz" class="btn btn-primary"><i class="fas fa-list me-1"></i>Back to Quizzes</a>
+      <a [routerLink]="['/user/quiz', result.quizId]" class="btn btn-outline-primary"><i class="fas fa-redo me-1"></i>Retake Quiz</a>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

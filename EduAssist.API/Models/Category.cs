@@ -3,5 +3,7 @@ public class Category
 {
     public int CategoryId { get; set; }
     public string SubjectName { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string SystemPrompt { get; set; } = string.Empty;
     public ICollection<UserRequest> UserRequests { get; set; } = new List<UserRequest>();
 }

@@ -1,0 +1,8 @@
+.content-wrapper { padding: 30px; min-height: calc(100vh - 120px); }
+.page-header { margin-bottom: 25px; }
+.page-header h2 { color: #333; font-weight: 600; }
+.score-card { text-align: center; padding: 30px; }
+.score-value { font-size: 3rem; font-weight: bold; }
+.score-label { font-size: 1.2rem; color: #666; }
+.correct-answer { border-left: 4px solid #28a745; }
+.incorrect-answer { border-left: 4px solid #dc3545; }
